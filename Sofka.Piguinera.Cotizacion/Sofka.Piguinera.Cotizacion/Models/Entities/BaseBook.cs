@@ -1,4 +1,5 @@
-﻿using static System.Reflection.Metadata.BlobBuilder;
+﻿using Sofka.Piguinera.Cotizacion.Models.Strategy;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Sofka.Piguinera.Cotizacion.Models.Entities
 {
@@ -14,6 +15,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public decimal Discount { get; set; } = 0;
 
+        private readonly List<IDiscountStrategy> _discountStrategies = new List<IDiscountStrategy>();
+
+
         public BaseBook()
         {
             
@@ -25,25 +29,37 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
             OriginalPrice = originalPrice;
             NameProvider = nameProvider;
             Seniority = seniority;
+
+            _discountStrategies = new List<IDiscountStrategy>
+        {
+            new SeniorityOneTwoDiscountStrategy(),
+            new SeniorityMoreThanTwoDiscountStrategy()
+        };
+
+
         }
 
 
         // Calcula el precio individual de cada libro
         public abstract float CalculateTotalPrice();
 
-        
-        public void  CalculateDiscount()
-        {
 
-            if (Seniority >= 1 && Seniority <= 2)
+        public void CalculateDiscount()
+        {
+            Console.WriteLine("Calculando descuento");
+
+            foreach (var strategy in _discountStrategies)
             {
-                Discount = 0.12m;
+                Console.WriteLine("Seniority: " + Seniority);
+                Console.WriteLine(strategy.CanApply(Seniority));
+                if (strategy.CanApply(Seniority))
+                {
+                    Discount = strategy.Apply();
+                    Console.WriteLine(Discount);
+                    break;
+                }
             }
-            else if (Seniority > 2)
-            {
-                Discount = 0.17m;
-            }
-        } 
+        }
 
 
         public override string ToString()
