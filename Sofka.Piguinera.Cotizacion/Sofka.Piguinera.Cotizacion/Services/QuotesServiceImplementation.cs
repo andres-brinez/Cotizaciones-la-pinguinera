@@ -39,7 +39,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
             // el valor a pagar  por todos los ejemplares            
             var totalPrice = books.Sum(item=>item.CalculateTotalPrice());
 
-            String typePurchase = "";
+            String typePurchase = "Compra al detal";
 
 
 
@@ -50,17 +50,15 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
                 if (books.Count <= 10)
                 {
-                    //book.RetailPurchase(books);
-                    typePurchase = "Compra al detal";
                     book.CurrentPrice *= 1.02; // Incremento del 2% para compras al detal
 
                 }
                 else
                 {
+                    
+
 
                 }
-
-
 
             }
 

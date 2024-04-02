@@ -53,17 +53,6 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
 
 
-        public void WholesalePurchase(List<BaseBook> books)
-        {
-
-            // Ordenar la lista de libros por el precio original de mayor a menor
-            books.Sort((libro1, libro2) => libro2.OriginalPrice.CompareTo(libro1.OriginalPrice));
-
-
-
-        }
-
-
 
 
 
