@@ -1,6 +1,6 @@
 # Cotizaciones  la pingüinera
 
-Este proyecto es una API que ayuda a la biblioteca la pingüinera para realizar los cálcusos de sus cotizaciones 
+Este proyecto es una API que ayuda a la biblioteca la pingüinera para realizar los cálculoa de sus cotizaciones 
 
 ## Características
 
