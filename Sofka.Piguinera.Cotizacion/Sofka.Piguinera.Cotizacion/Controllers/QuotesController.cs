@@ -32,7 +32,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var result = _quotesService.CalculateTotalPrice(payload);
+            var result = _quotesService.CalculateTotalPricePurchese(payload);
             return Ok(result);
         }
 
@@ -50,7 +50,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 }
             }
 
-            var result = _quotesService.CalculateTotalPrice(payload);
+            var result = _quotesService.CalculateTotalPricePurchese(payload);
             return Ok(result);
         }
 
