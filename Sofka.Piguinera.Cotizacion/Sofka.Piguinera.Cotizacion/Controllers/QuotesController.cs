@@ -18,7 +18,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
             _quotesService = quotesService;
             _validator = validator;
         }
-
+        
         [HttpPost("CalculateBookPay")]
         public async Task<ActionResult> CalculateTotalPriceBook( BaseBookDTO payload)
         {
@@ -32,9 +32,11 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var result = _quotesService.CalculateTotalPricePurchese(payload);
+            var result = _quotesService.TotalPricePurchese(payload);
             return Ok(result);
         }
+        
+
 
         [HttpPost("CalculateBooksPay")]
         public async Task<ActionResult> CalculateTotalPriceBook(List<BaseBookDTO> payload)
@@ -50,7 +52,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 }
             }
 
-            var result = _quotesService.CalculateTotalPricePurchese(payload);
+            var result = _quotesService.TotalPricePurcheses(payload);
             return Ok(result);
         }
 
