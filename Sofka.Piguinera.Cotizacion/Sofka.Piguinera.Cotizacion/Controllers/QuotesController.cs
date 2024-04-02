@@ -12,18 +12,21 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
     {
         private readonly IQuotesService _quotesService;
         private readonly IValidator<BaseBookDTO> _validator ;
+        private readonly IValidator<BookWithBudgetDTO> _validatorBudget;
 
-        public QuotesController(IQuotesService quotesService, IValidator<BaseBookDTO> validator)
+
+
+        public QuotesController(IQuotesService quotesService, IValidator<BaseBookDTO> validator, IValidator<BookWithBudgetDTO> validatorBudget)
         {
             _quotesService = quotesService;
             _validator = validator;
+            _validatorBudget = validatorBudget;
         }
         
         [HttpPost("CalculateBookPay")]
         public async Task<ActionResult> CalculateTotalPriceBook( BaseBookDTO payload)
         {
 
-            Console.WriteLine("Calculando precio de un libro");
 
             var validationResult = await _validator.ValidateAsync(payload);
 
@@ -53,6 +56,22 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
             }
 
             var result = _quotesService.TotalPricePurcheses(payload);
+            return Ok(result);
+        }
+
+
+        [HttpPost("CalculateBooksBudget")]
+        public async Task<ActionResult> CalculateTotalPriceBookBudget(BookWithBudgetDTO payload)
+        {
+
+            var validationResult = await _validatorBudget.ValidateAsync(payload);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var result = _quotesService.BooksBudget(payload);
             return Ok(result);
         }
 
