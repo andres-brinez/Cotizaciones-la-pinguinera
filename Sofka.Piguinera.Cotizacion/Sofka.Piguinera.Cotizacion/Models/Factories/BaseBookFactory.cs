@@ -16,11 +16,6 @@ namespace Sofka.Piguinera.Cotizacion.Models.Factories
             };
 
 
-            Console.WriteLine("Creando un libro ");
-            Console.WriteLine("Tipo de libro: " + payload.Type);
-            Console.WriteLine("Nombre del proveedor: " + payload.NameProvider);
-            Console.WriteLine("Antiguedad del proveedor: " + payload.Seniority);
-
             var Book = booksChildren[payload.Type];
 
             if (Book == null)
