@@ -8,7 +8,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         String CalculateTotalPrice(BaseBookDTO payload);
 
-        Quotes CalculateTotalPrice(List<BaseBookDTO> payload);
+        String CalculateTotalPrice(List<BaseBookDTO> payload);
 
     }
 }
