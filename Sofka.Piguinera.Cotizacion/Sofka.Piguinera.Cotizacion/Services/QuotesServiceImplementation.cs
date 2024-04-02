@@ -1,6 +1,8 @@
 ﻿using Sofka.Piguinera.Cotizacion.Models.DTOS;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
+using static System.Reflection.Metadata.BlobBuilder;
+
 
 namespace Sofka.Piguinera.Cotizacion.Services
 {
@@ -16,40 +18,28 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
 
         // Calculate value to pay
-        public string CalculateTotalPricePurchese(BaseBookDTO payload)
+        public string TotalPricePurchese(BaseBookDTO payload)
         {
             var book= _baseBookFactory.Create(payload);
 
-            book.CalculateTotalPrice().ToString("Compra al detal");
+            book.CalculateTotalPrice();
+
+            BookPricingService.ApplyRetailIncrease(book);
 
             return book.ToString();
         }
 
 
         // Calculate value to pay
-        public String CalculateTotalPricePurchese(List<BaseBookDTO> payload)
+        public String TotalPricePurcheses(List<BaseBookDTO> payload)
         {
-            const double RETAIL_INCREASE = 1.02;
-            const double BULK_DECREASE_PER_UNIT = 0.15;
 
             var books = payload.Select(item => _baseBookFactory.Create(item)).ToList();            
             books = books.OrderByDescending(item => item.CurrentPrice).ToList();
 
             String typePurchase = books.Count > 10 ? "Compra al por mayor" : "Compra al detal";
 
-            for (int i = 0; i < books.Count; i++)
-            {
-                books[i].CalculateTotalPrice();
-
-                if (i >= 10)
-                {
-                    ApplyBulkDecrease(books[i], BULK_DECREASE_PER_UNIT);
-                }
-                else
-                {
-                    ApplyRetailIncrease(books[i], RETAIL_INCREASE);
-                }
-            }
+            BookPricingService.CalculatePurcheseValue(books);
 
             var totalPrice = (float)books.Sum(item => item.CurrentPrice);
 
@@ -58,17 +48,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
             return quotes.ToString();
         }
 
-
-        private void ApplyRetailIncrease(BaseBook book, double increase)
-        {
-            book.CurrentPrice *= increase;
-        }
-
-        private void ApplyBulkDecrease(BaseBook book, double decreasePerUnit)
-        {
-            var discount = book.CurrentPrice * decreasePerUnit;
-            book.CurrentPrice -= discount;
-        }
+      
 
     }
 }
