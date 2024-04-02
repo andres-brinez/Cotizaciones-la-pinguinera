@@ -16,13 +16,10 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
 
         // Calculate value to pay
-        public string CalculateTotalPrice(BaseBookDTO payload)
+        public string CalculateTotalPricePurchese(BaseBookDTO payload)
         {
             //return book.CalculateTotalPrice();
             var book= _baseBookFactory.Create(payload);
-
-
-
 
             book.CalculateTotalPrice().ToString("Compra al detal");
 
@@ -31,43 +28,40 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
 
         // Calculate value to pay
-        public String CalculateTotalPrice(List<BaseBookDTO> payload)
+        public String CalculateTotalPricePurchese(List<BaseBookDTO> payload)
         {
+            const double RETAIL_INCREASE = 1.02;
+            const double BULK_DECREASE_PER_UNIT = 0.15;
 
-            var books = payload.Select(item=>_baseBookFactory.Create(item)).ToList();
+            var books = payload.Select(item => _baseBookFactory.Create(item)).ToList();            
+            books = books.OrderByDescending(item => item.CurrentPrice).ToList();
 
-            // el valor a pagar  por todos los ejemplares            
-            var totalPrice = books.Sum(item=>item.CalculateTotalPrice());
+            String typePurchase = books.Count > 10 ? "Compra al por mayor" : "Compra al detal";
 
-            String typePurchase = "Compra al detal";
-
-
-
-            foreach (var book in books)
+            for (int i = 0; i < books.Count; i++)
             {
+                books[i].CalculateTotalPrice();
 
-                book.CalculateTotalPrice();
-
-                if (books.Count <= 10)
+                if (i >= 10)
                 {
-                    book.CurrentPrice *= 1.02; // Incremento del 2% para compras al detal
+                    books[i].Discount+= (decimal)BULK_DECREASE_PER_UNIT;
+                    var discount = books[i].CurrentPrice * BULK_DECREASE_PER_UNIT;
+                    books[i].CurrentPrice -= discount;
 
                 }
                 else
                 {
-                    
-
-
+                    books[i].CurrentPrice *= RETAIL_INCREASE;
                 }
-
             }
-
+            
+          
+            // Calculate the total price
+            var totalPrice = (float)books.Sum(item => item.CurrentPrice);
 
             Quotes quotes = new Quotes(books, totalPrice, typePurchase);
 
-
             return quotes.ToString();
-
         }
 
 
