@@ -18,11 +18,18 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
             //El precio de los libros es aumentado 1/3 de su precio original,
             decimal  totalPrice = (decimal)(OriginalPrice + (OriginalPrice* CURRENT_INCREASE));
 
+            Console.WriteLine("El precio total del libro es: " + totalPrice);
+            Console.WriteLine("El descuento aplicado es: " + Discount*100 + "%");
+
             CurrentPrice = (double)(totalPrice * (1 - Discount));
+            Console.WriteLine("El precio actual del libro es: " + CurrentPrice);
 
             return (float)CurrentPrice ;
         
         }
+
+
+      
     }
     
     
