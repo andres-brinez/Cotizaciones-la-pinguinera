@@ -41,9 +41,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             return $"Books and novels: \n" +
                 $"" +
-                $"{sb.ToString()}" +
-                $"- TotalPrices: {TotalPrices}\n"+
-                $"- TypePurchase: {TypePurchase}";
+                $"{sb.ToString()}\n" +
+                $"- Total Prices: {TotalPrices}\n"+
+                $"- Type Purchase: {TypePurchase}";
 
 
 
