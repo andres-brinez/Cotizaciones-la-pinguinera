@@ -15,8 +15,6 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             CalculateDiscountSeniority();
 
-
-            //El precio de los libros es aumentado 1/3 de su precio original,
             decimal  totalPrice = (decimal)(OriginalPrice + (OriginalPrice* CURRENT_INCREASE));
 
             CurrentPrice = (double)(totalPrice * (1 - Discount));

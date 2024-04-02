@@ -18,7 +18,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
         // Calculate value to pay
         public string CalculateTotalPricePurchese(BaseBookDTO payload)
         {
-            //return book.CalculateTotalPrice();
             var book= _baseBookFactory.Create(payload);
 
             book.CalculateTotalPrice().ToString("Compra al detal");
@@ -67,7 +66,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         private void ApplyBulkDecrease(BaseBook book, double decreasePerUnit)
         {
-            book.Discount += (decimal)decreasePerUnit;
             var discount = book.CurrentPrice * decreasePerUnit;
             book.CurrentPrice -= discount;
         }

@@ -5,22 +5,16 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
     public class Quotes
     {
 
-
         // Tiene la información de los libros que se van a cotizar
 
         public List<BaseBook> Books { get; set; }
 
-        //typePurchase
         public  string TypePurchase { get; set; }
-
 
         public float TotalPrices { get; set; }
 
-        //public const float DISCOUNT_Aplicados = 0.19f;
 
-        public Quotes()
-        {
-        }
+        public Quotes(){}
 
         public Quotes(List<BaseBook> books,float totalPrices,string typePurchase)
         {
@@ -46,10 +40,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
                 $"- Type Purchase: {TypePurchase}";
 
 
-
         }
-
-
 
     }
 }
