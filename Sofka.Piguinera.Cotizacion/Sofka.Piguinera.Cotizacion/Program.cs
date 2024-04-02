@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IQuotesService, QuotesServiceImplementation>();
 builder.Services.AddSingleton<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookDTO>, BaseBookDTO.BaseBookDTOValidator>();
+builder.Services.AddSingleton<IValidator<BookWithBudgetDTO>, BookWithBudgetDTO.BookWithBudgetDTOValidator>();
 
 var app = builder.Build();
 
