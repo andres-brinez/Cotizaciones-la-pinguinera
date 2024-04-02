@@ -1,11 +1,13 @@
-﻿namespace Sofka.Piguinera.Cotizacion.Models.Entities
+﻿using Sofka.Piguinera.Cotizacion.Models.Enums;
+
+namespace Sofka.Piguinera.Cotizacion.Models.Entities
 {
     public class Novel : BaseBook
     {
-        public Novel(string title, int originalPrice, string nameProvider, int seniority) : base(title, originalPrice, nameProvider, seniority)
-        {
-        }
-
+        public Novel(string title, int originalPrice, string nameProvider, int seniority)
+         : base(title, originalPrice, nameProvider, seniority, BaseBookType.Novel)
+        {}
+   
         public override float CalculateTotalPrice()
         {
 

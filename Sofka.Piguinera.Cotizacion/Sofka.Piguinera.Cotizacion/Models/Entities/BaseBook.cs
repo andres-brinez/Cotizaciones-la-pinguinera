@@ -1,4 +1,5 @@
-﻿using Sofka.Piguinera.Cotizacion.Models.Strategy;
+﻿using Sofka.Piguinera.Cotizacion.Models.Enums;
+using Sofka.Piguinera.Cotizacion.Models.Strategy;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Sofka.Piguinera.Cotizacion.Models.Entities
@@ -9,11 +10,10 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         public string Title { get; set; }
         public int OriginalPrice { get; set; }
         public Double CurrentPrice { get; set;}
-
         public string NameProvider { get; set; } = string.Empty;
         public int Seniority { get; set; }
-
         public decimal Discount { get; set; } = 0;
+        public BaseBookType Type { get; set; } 
 
 
         private readonly List<IDiscountStrategy> _discountStrategies = new List<IDiscountStrategy>();
@@ -24,19 +24,19 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
             
         }
 
-        protected BaseBook(string title, int originalPrice, string nameProvider, int seniority)
+        protected BaseBook(string title, int originalPrice, string nameProvider, int seniority, BaseBookType type)
         {
             Title = title;
             OriginalPrice = originalPrice;
             NameProvider = nameProvider;
             Seniority = seniority;
+            Type = type;
 
             _discountStrategies = new List<IDiscountStrategy>
             {
                 new SeniorityOneTwoDiscountStrategy(),
                 new SeniorityMoreThanTwoDiscountStrategy()
             };
-
 
         }
 
@@ -51,7 +51,6 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
                 if (strategy.CanApply(Seniority))
                 {
                     Discount = strategy.Apply();
-                    Console.WriteLine(Discount);
                     break;
                 }
             }
@@ -60,7 +59,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public override string ToString()
         {
-            return $" - Title: {Title}, Price: {CurrentPrice}, Discount: {Discount*100}% \n";
+            return $" - Title: {Title}, Type: {Type} Price: {CurrentPrice}, Discount: {Discount*100}% \n";
         }
 
     }
