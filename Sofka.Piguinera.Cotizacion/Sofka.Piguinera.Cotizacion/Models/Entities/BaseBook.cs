@@ -1,4 +1,6 @@
-﻿namespace Sofka.Piguinera.Cotizacion.Models.Entities
+﻿using static System.Reflection.Metadata.BlobBuilder;
+
+namespace Sofka.Piguinera.Cotizacion.Models.Entities
 {
     public abstract class BaseBook
     {
@@ -25,12 +27,6 @@
             Seniority = seniority;
         }
 
-        protected BaseBook(string title, int originalPrice)
-        {
-            Title = title;
-            OriginalPrice = originalPrice;
-        }
-
 
         // Calcula el precio individual de cada libro
         public abstract float CalculateTotalPrice();
@@ -52,11 +48,24 @@
 
         public override string ToString()
         {
-            return $"Title: {Title},  Price: {CurrentPrice}";
+            return $" - Title: {Title}, Price: {CurrentPrice}, Discount: {Discount*100}% \n";
         }
 
 
-      
+
+        public void WholesalePurchase(List<BaseBook> books)
+        {
+
+            // Ordenar la lista de libros por el precio original de mayor a menor
+            books.Sort((libro1, libro2) => libro2.OriginalPrice.CompareTo(libro1.OriginalPrice));
+
+
+
+        }
+
+
+
+
 
 
     }
