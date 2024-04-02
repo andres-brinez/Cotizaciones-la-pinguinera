@@ -11,7 +11,7 @@
 
             const decimal CURRENT_INCREASE = 2;
 
-            CalculateDiscount();
+            CalculateDiscountSeniority();
            
             CurrentPrice = (double)(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
 

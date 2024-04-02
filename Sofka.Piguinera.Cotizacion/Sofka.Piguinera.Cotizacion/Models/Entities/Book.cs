@@ -13,7 +13,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             const  Double CURRENT_INCREASE  = 0.33;
 
-            CalculateDiscount();
+            CalculateDiscountSeniority();
 
 
             //El precio de los libros es aumentado 1/3 de su precio original,
