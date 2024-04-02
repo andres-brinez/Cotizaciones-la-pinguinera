@@ -15,6 +15,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public decimal Discount { get; set; } = 0;
 
+
         private readonly List<IDiscountStrategy> _discountStrategies = new List<IDiscountStrategy>();
 
 
@@ -31,27 +32,22 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
             Seniority = seniority;
 
             _discountStrategies = new List<IDiscountStrategy>
-        {
-            new SeniorityOneTwoDiscountStrategy(),
-            new SeniorityMoreThanTwoDiscountStrategy()
-        };
+            {
+                new SeniorityOneTwoDiscountStrategy(),
+                new SeniorityMoreThanTwoDiscountStrategy()
+            };
 
 
         }
 
-
-        // Calcula el precio individual de cada libro
         public abstract float CalculateTotalPrice();
 
 
-        public void CalculateDiscount()
+        public void CalculateDiscountSeniority()
         {
-            Console.WriteLine("Calculando descuento");
 
             foreach (var strategy in _discountStrategies)
             {
-                Console.WriteLine("Seniority: " + Seniority);
-                Console.WriteLine(strategy.CanApply(Seniority));
                 if (strategy.CanApply(Seniority))
                 {
                     Discount = strategy.Apply();
@@ -66,12 +62,6 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         {
             return $" - Title: {Title}, Price: {CurrentPrice}, Discount: {Discount*100}% \n";
         }
-
-
-
-
-
-
 
     }
 }
