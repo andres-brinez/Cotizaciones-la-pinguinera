@@ -21,40 +21,58 @@ namespace Sofka.Piguinera.Cotizacion.Services
             //return book.CalculateTotalPrice();
             var book= _baseBookFactory.Create(payload);
 
-            book.CalculateTotalPrice().ToString();
+
+
+
+            book.CalculateTotalPrice().ToString("Compra al detal");
 
             return book.ToString();
         }
 
 
         // Calculate value to pay
-        public Quotes CalculateTotalPrice(List<BaseBookDTO> payload)
+        public String CalculateTotalPrice(List<BaseBookDTO> payload)
         {
 
             var books = payload.Select(item=>_baseBookFactory.Create(item)).ToList();
 
             // el valor a pagar  por todos los ejemplares            
             var totalPrice = books.Sum(item=>item.CalculateTotalPrice());
-            // pasarlo a double
 
-
-            // los descuentos aplicados
-            // cantidas a pagar por cada ejemplar
-
-
-            //var discount = totalPrice * Quotes.DISCOUNT_Aplicados;
-
-            return new Quotes(books, totalPrice);
+            String typePurchase = "";
 
 
 
+            foreach (var book in books)
+            {
+
+                book.CalculateTotalPrice();
+
+                if (books.Count <= 10)
+                {
+                    //book.RetailPurchase(books);
+                    typePurchase = "Compra al detal";
+                    book.CurrentPrice *= 1.02; // Incremento del 2% para compras al detal
+
+                }
+                else
+                {
+
+                }
 
 
 
+            }
 
 
+            Quotes quotes = new Quotes(books, totalPrice, typePurchase);
+
+
+            return quotes.ToString();
 
         }
+
+
 
 
 
