@@ -44,19 +44,14 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
                 if (i >= 10)
                 {
-                    books[i].Discount+= (decimal)BULK_DECREASE_PER_UNIT;
-                    var discount = books[i].CurrentPrice * BULK_DECREASE_PER_UNIT;
-                    books[i].CurrentPrice -= discount;
-
+                    ApplyBulkDecrease(books[i], BULK_DECREASE_PER_UNIT);
                 }
                 else
                 {
-                    books[i].CurrentPrice *= RETAIL_INCREASE;
+                    ApplyRetailIncrease(books[i], RETAIL_INCREASE);
                 }
             }
-            
-          
-            // Calculate the total price
+
             var totalPrice = (float)books.Sum(item => item.CurrentPrice);
 
             Quotes quotes = new Quotes(books, totalPrice, typePurchase);
@@ -65,18 +60,17 @@ namespace Sofka.Piguinera.Cotizacion.Services
         }
 
 
+        private void ApplyRetailIncrease(BaseBook book, double increase)
+        {
+            book.CurrentPrice *= increase;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
+        private void ApplyBulkDecrease(BaseBook book, double decreasePerUnit)
+        {
+            book.Discount += (decimal)decreasePerUnit;
+            var discount = book.CurrentPrice * decreasePerUnit;
+            book.CurrentPrice -= discount;
+        }
 
     }
 }
