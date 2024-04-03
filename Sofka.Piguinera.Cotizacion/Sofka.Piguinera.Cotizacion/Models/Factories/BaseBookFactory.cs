@@ -1,4 +1,4 @@
-﻿using Sofka.Piguinera.Cotizacion.Models.DTOS;
+﻿using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 
@@ -7,7 +7,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Factories
     public class BaseBookFactory : IBaseBookFactory
     {
 
-        public BaseBook Create(BaseBookDTO payload)
+        public BaseBook Create(BaseBookInputDTO payload)
         {
             var booksChildren = new Dictionary<BaseBookType, BaseBook>
             {
