@@ -8,16 +8,23 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
          : base(title, originalPrice, nameProvider, seniority, BaseBookType.Novel)
         {}
    
-        public override float CalculateTotalPrice()
+        public override void CalculateTotalPrice()
         {
 
-            const decimal CURRENT_INCREASE = 2;
+            const float CURRENT_INCREASE = 2;
+
+            Console.WriteLine("Calculating total price for Novel");
+
+            Console.WriteLine("Original Price: " + OriginalPrice);
 
             CalculateDiscountSeniority();
            
-            CurrentPrice = (double)(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
+            CurrentPrice = (float)(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
 
-            return (float)CurrentPrice;
+            Console.WriteLine(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
+
+            Console.WriteLine("Total Price: " + CurrentPrice);
+
         }
 
 

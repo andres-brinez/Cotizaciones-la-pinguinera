@@ -9,10 +9,10 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public string Title { get; set; }
         public int OriginalPrice { get; set; }
-        public Double CurrentPrice { get; set;}
+        public float CurrentPrice { get; set;}
         public string NameProvider { get; set; } = string.Empty;
         public int Seniority { get; set; }
-        public decimal Discount { get; set; } = 0;
+        public float Discount { get; set; } = 0;
         public BaseBookType Type { get; set; } 
 
 
@@ -40,7 +40,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         }
 
-        public abstract float CalculateTotalPrice();
+        public abstract void CalculateTotalPrice();
 
 
         public void CalculateDiscountSeniority()
