@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.OpenApi.Models;
-using Sofka.Piguinera.Cotizacion.Models.DTOS;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Services;
 using Swashbuckle.AspNetCore.Filters;
@@ -13,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IQuotesService, QuotesServiceImplementation>();
 builder.Services.AddSingleton<IBaseBookFactory, BaseBookFactory>();
-builder.Services.AddSingleton<IValidator<BaseBookDTO>, BaseBookDTO.BaseBookDTOValidator>();
-builder.Services.AddSingleton<IValidator<BookWithBudgetDTO>, BookWithBudgetDTO.BookWithBudgetDTOValidator>();
+builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();
+builder.Services.AddSingleton<IValidator<BookWithBudgeInputDTO>, BookWithBudgeInputDTO.BookWithBudgetDTOValidator>();
 
 // Add Swagger services
 builder.Services.AddSwaggerGen(c =>
