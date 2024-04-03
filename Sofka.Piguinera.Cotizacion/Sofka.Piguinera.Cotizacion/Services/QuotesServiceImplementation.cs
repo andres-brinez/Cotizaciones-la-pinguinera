@@ -72,11 +72,13 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             foreach (var book in books)
             {
+
                 bool isAvailableBudget = totalBudgetAvailable > book.CurrentPrice;
                 bool shouldAddBook = isAvailableBudget && (
                     (book.Type == BaseBookType.Novel && !hasNovel) ||
                     (book.Type == BaseBookType.Book && !hasBook) ||
                     (hasBook && hasNovel));
+
 
                 if (shouldAddBook)
                 {
