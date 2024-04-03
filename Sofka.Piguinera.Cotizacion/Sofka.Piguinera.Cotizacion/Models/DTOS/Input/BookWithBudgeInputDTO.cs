@@ -1,23 +1,23 @@
 ﻿using FluentValidation;
 
-namespace Sofka.Piguinera.Cotizacion.Models.DTOS
+namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
 {
-    public class BookWithBudgetDTO
+    public class BookWithBudgeInputDTO
     {
-        public List<BaseBookDTO> Books { get; set; }
+        public List<BaseBookInputDTO> Books { get; set; }
         public decimal Budget { get; set; }
 
-        public BookWithBudgetDTO()
+        public BookWithBudgeInputDTO()
         {
         }
 
-        public BookWithBudgetDTO(List<BaseBookDTO> book, decimal budget)
+        public BookWithBudgeInputDTO(List<BaseBookInputDTO> book, decimal budget)
         {
             Books = book;
             Budget = budget;
         }
 
-        public class BookWithBudgetDTOValidator : AbstractValidator<BookWithBudgetDTO>
+        public class BookWithBudgetDTOValidator : AbstractValidator<BookWithBudgeInputDTO>
         {
             public BookWithBudgetDTOValidator()
             {
