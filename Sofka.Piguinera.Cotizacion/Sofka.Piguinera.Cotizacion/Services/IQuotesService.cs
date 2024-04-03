@@ -9,7 +9,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         BaseBookOutputDTO TotalPricePurchese(BaseBookInputDTO payload);
 
-        String TotalPricePurcheses(List<BaseBookInputDTO> payload);
+        BooksPurcheseOutputDTO TotalPricePurcheses(List<BaseBookInputDTO> payload);
 
         string BooksBudget (BookWithBudgeInputDTO payload);
 
