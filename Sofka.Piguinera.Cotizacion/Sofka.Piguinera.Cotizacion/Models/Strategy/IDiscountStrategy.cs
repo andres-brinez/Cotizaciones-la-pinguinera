@@ -4,7 +4,7 @@
     {
 
         bool CanApply(int seniority);
-        decimal Apply();
+        float Apply();
 
     }
 }
