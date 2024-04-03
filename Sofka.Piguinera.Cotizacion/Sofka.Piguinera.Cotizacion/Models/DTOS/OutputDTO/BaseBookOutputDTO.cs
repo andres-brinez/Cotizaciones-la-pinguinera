@@ -5,7 +5,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO
     public class BaseBookOutputDTO
     {
 
-        private string Title { get; set; }
+        public string Title { get; set; }
         public BaseBookType Type { get; set; }
         public float Price { get; set; }
         public string Discount { get; set; }
