@@ -99,17 +99,10 @@ namespace Sofka.Piguinera.Cotizacion.Services
                 
             }
 
-           
 
+            string mensaje = "No se puede comprar ningun libro con el presupuesto actual";
 
-           
-            if (booksAvailable.Count == 0)
-            {
-                return "No se puede comprar ningun libro con el presupuesto actual";
-            }
-
-            return showInformation(booksAvailable, totalBudgetAvailable);
-
+            return booksAvailable.Count == 0 ? mensaje : showInformation(booksAvailable, totalBudgetAvailable);
 
         }
 
