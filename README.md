@@ -59,6 +59,8 @@ La API expone dos endpoints:
 
 [Sofka Pinguinera.postman_collection.json](https://github.com/andres-brinez/Cotizaciones-la-pinguinera/files/14830422/Sofka.Pinguinera.postman_collection.json)
 
+## Documentación Swagger
+http://localhost:5275/swagger/index.html
 
 ## Licencia
 
