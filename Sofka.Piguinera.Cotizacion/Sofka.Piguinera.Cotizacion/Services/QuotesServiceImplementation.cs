@@ -85,12 +85,10 @@ namespace Sofka.Piguinera.Cotizacion.Services
                     (book.Type == BaseBookType.Book && !hasBook) ||
                     (hasBook && hasNovel));
 
-
                 if (shouldAddBook)
                 {
                     booksAvailable.Add(book);
                     totalBudgetAvailable -= book.CurrentPrice;
-
 
                     bool hasBookAvailable= book.Type == BaseBookType.Novel ? hasNovel = true : hasBook = true;
                 }
