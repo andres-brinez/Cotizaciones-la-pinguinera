@@ -65,42 +65,31 @@ namespace Sofka.Piguinera.Cotizacion.Services
         }
 
         private List<BaseBook> SelectBooksWithinBudget(List<BaseBook> books, ref double totalBudgetAvailable)
+        {
+            List<BaseBook> booksAvailable = new List<BaseBook>();
+            bool hasBook = false;
+            bool hasNovel = false;
+
+            foreach (var book in books)
             {
-                List<BaseBook> booksAvailable = new List<BaseBook>();
-                bool hasBook = false;
-                bool hasNovel = false;
+                bool isAvailableBudget = totalBudgetAvailable > book.CurrentPrice;
+                bool shouldAddBook = isAvailableBudget && (
+                    (book.Type == BaseBookType.Novel && !hasNovel) ||
+                    (book.Type == BaseBookType.Book && !hasBook) ||
+                    (hasBook && hasNovel));
 
-                foreach (var book in books)
+                if (shouldAddBook)
                 {
-                    bool isAvailableBudget = totalBudgetAvailable > book.CurrentPrice;
-                    bool shouldAddBook = isAvailableBudget && (
-                        (book.Type == BaseBookType.Novel && !hasNovel) ||
-                        (book.Type == BaseBookType.Book && !hasBook) ||
-                        (hasBook && hasNovel));
+                    booksAvailable.Add(book);
+                    totalBudgetAvailable -= book.CurrentPrice;
 
-                    if (shouldAddBook)
-                    {
-                        booksAvailable.Add(book);
-                        totalBudgetAvailable -= book.CurrentPrice;
 
-                        if (book.Type == BaseBookType.Novel)
-                        {
-                            hasNovel = true;
-                        }
-                        else if (book.Type == BaseBookType.Book)
-                        {
-                            hasBook = true;
-                        }
-                    }
+                    bool hasBookAvailable= book.Type == BaseBookType.Novel ? hasNovel = true : hasBook = true;
                 }
-
-                return booksAvailable;
             }
 
-
-
-
-       
+            return booksAvailable;
+        }
 
     }
 
