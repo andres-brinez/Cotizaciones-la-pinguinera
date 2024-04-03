@@ -1,4 +1,5 @@
-﻿using Sofka.Piguinera.Cotizacion.Models.DTOS;
+﻿using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 
 namespace Sofka.Piguinera.Cotizacion.Services
@@ -6,11 +7,11 @@ namespace Sofka.Piguinera.Cotizacion.Services
     public interface IQuotesService
     {
 
-        String TotalPricePurchese(BaseBookDTO payload);
+        BaseBookOutputDTO TotalPricePurchese(BaseBookInputDTO payload);
 
-        String TotalPricePurcheses(List<BaseBookDTO> payload);
+        String TotalPricePurcheses(List<BaseBookInputDTO> payload);
 
-        string BooksBudget (BookWithBudgetDTO payload);
+        string BooksBudget (BookWithBudgeInputDTO payload);
 
     }
 }

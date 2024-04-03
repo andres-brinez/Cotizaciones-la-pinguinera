@@ -1,4 +1,5 @@
-﻿using Sofka.Piguinera.Cotizacion.Models.DTOS;
+﻿using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
@@ -19,7 +20,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
             _baseBookFactory = baseBookFactory;
         }
         
-        public string TotalPricePurchese(BaseBookDTO payload)
+        public BaseBookOutputDTO TotalPricePurchese(BaseBookInputDTO payload)
         {
             var book= _baseBookFactory.Create(payload);
 
@@ -27,10 +28,12 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             BookPricingService.ApplyRetailIncrease(book);
 
-            return book.ToString();
+            BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount);
+
+            return baseBookOutputDTO;
         }
 
-        public String TotalPricePurcheses(List<BaseBookDTO> payload)
+        public String TotalPricePurcheses(List<BaseBookInputDTO> payload)
         {
 
             var books = payload.Select(item => _baseBookFactory.Create(item)).ToList();            
@@ -48,7 +51,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
         }
 
 
-        public string BooksBudget(BookWithBudgetDTO payload)
+        public string BooksBudget(BookWithBudgeInputDTO payload)
         {
             var books = payload.Books.Select(item => _baseBookFactory.Create(item)).ToList();
             BookPricingService.CalculatePurcheseValue(books);
