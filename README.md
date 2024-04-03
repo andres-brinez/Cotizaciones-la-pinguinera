@@ -56,8 +56,8 @@ La API expone dos endpoints:
 - ![image](https://github.com/andres-brinez/Cotizaciones-la-pinguinera/assets/94869227/ae6c2a63-cb82-47d0-b7e3-db4d0324820e)
 
   ## Archivo con las peticiones Postman
+[Sofka Pinguinera.postman_collection.json](https://github.com/andres-brinez/Cotizaciones-la-pinguinera/files/14847010/Sofka.Pinguinera.postman_collection.json)
 
-[Sofka Pinguinera.postman_collection.json](https://github.com/andres-brinez/Cotizaciones-la-pinguinera/files/14830422/Sofka.Pinguinera.postman_collection.json)
 
 ## Documentación Swagger
 http://localhost:5275/swagger/index.html
