@@ -29,10 +29,9 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
 
 
-        [HttpPost("CalculateBookPay")]
-
-
-
+         [HttpPost("CalculateBookPay")]
+         [SwaggerOperation(Summary = "Calculate the total price of a book", Description = "This method takes a BaseBookDTO object as input, validates it, and then calculates the total price of the book.")]
+         [SwaggerResponse(StatusCodes.Status200OK, "Returns a string with the total price of the book, including details about the book, its discount, and its new price.")]
         public async Task<ActionResult> CalculateTotalPriceBook([FromBody, SwaggerParameter("The book details.", Required = true)] BaseBookDTO payload)
         {
 
