@@ -11,7 +11,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         BooksPurcheseOutputDTO TotalPricePurcheses(List<BaseBookInputDTO> payload);
 
-        string BooksBudget (BookWithBudgeInputDTO payload);
+        BookWithBudgeOutputDTO BooksBudget (BookWithBudgeInputDTO payload);
 
     }
 }

@@ -38,7 +38,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             var books = payload.Select(item => _baseBookFactory.Create(item)).ToList();  
             
-            books = books.OrderByDescending(item => item.CurrentPrice).ToList();
+           // books = books.OrderByDescending(item => item.CurrentPrice).ToList();
             BookPricingService.CalculatePurcheseValue(books);
 
             List<BaseBookOutputDTO> booksOutput = books.Select(item => new BaseBookOutputDTO(item.Title, item.Type, item.CurrentPrice, item.Discount)).ToList();
@@ -52,19 +52,21 @@ namespace Sofka.Piguinera.Cotizacion.Services
         }
 
 
-        public string BooksBudget(BookWithBudgeInputDTO payload)
+        public BookWithBudgeOutputDTO BooksBudget(BookWithBudgeInputDTO payload)
         {
             var books = payload.Books.Select(item => _baseBookFactory.Create(item)).ToList();
             BookPricingService.CalculatePurcheseValue(books);
             books = books.OrderByDescending(item => item.Discount).ToList();
 
+            List<BaseBookOutputDTO> booksOutput = books.Select(item => new BaseBookOutputDTO(item.Title, item.Type, item.CurrentPrice, item.Discount)).ToList();
+
             double totalBudgetAvailable = (double)payload.Budget;
             List<BaseBook> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
 
-            string message = "No se puede comprar ningun libro con el presupuesto actual";
 
+            BookWithBudgeOutputDTO bookWithBudgeOutputDTO = new BookWithBudgeOutputDTO(booksOutput, (float)totalBudgetAvailable);
 
-            return booksAvailable.Count == 0 ? message : ShowInformation.Show(booksAvailable, totalBudgetAvailable);
+            return bookWithBudgeOutputDTO;
 
         }
 
