@@ -11,7 +11,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Description("Controller for handling book quote operations.")]
