@@ -14,6 +14,7 @@ La API actualmente soporta las siguientes características:
 - .NET Core
 - FluentValidation
 - C#
+- Swagger
 
 ## Instalación
 
