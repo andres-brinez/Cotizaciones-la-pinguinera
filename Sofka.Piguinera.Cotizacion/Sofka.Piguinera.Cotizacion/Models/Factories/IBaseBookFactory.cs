@@ -6,7 +6,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Factories
     public interface IBaseBookFactory
     {
 
-        BaseBook Create(BaseBookInputDTO payload);
+        BaseBookEntity Create(BaseBookInputDTO payload);
 
     }
 }

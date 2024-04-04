@@ -6,7 +6,7 @@ namespace Sofka.Piguinera.Cotizacion.Utils
     public class ShowInformation
     {
 
-        public static string Show(List<BaseBook> books, double budget)
+        public static string Show(List<BaseBookEntity> books, double budget)
         {
             // retorna el presupuesto  con los libros que se pueden comprar
 

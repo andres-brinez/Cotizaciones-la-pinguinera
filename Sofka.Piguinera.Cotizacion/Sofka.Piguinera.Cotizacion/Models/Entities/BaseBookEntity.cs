@@ -4,9 +4,10 @@ using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Sofka.Piguinera.Cotizacion.Models.Entities
 {
-    public abstract class BaseBook
+    public abstract class BaseBookEntity
     {
 
+        public string Id { get; set; } = string.Empty;
         public string Title { get; set; }
         public int OriginalPrice { get; set; }
         public float CurrentPrice { get; set;}
@@ -20,13 +21,14 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         private readonly List<IDiscountStrategy> _discountStrategies = new List<IDiscountStrategy>();
 
 
-        public BaseBook()
+        public BaseBookEntity()
         {
             
         }
 
-        protected BaseBook(string title, int originalPrice, string nameProvider, int seniority, int cuantity,BaseBookType type)
+        protected BaseBookEntity(string id,string title, int originalPrice, string nameProvider, int seniority, int cuantity,BaseBookType type)
         {
+            Id = id;
             Title = title;
             OriginalPrice = originalPrice;
             NameProvider = nameProvider;
