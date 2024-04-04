@@ -14,12 +14,16 @@
 
         }
 
-        public BooksPurcheseOutputDTO(List<BaseBookOutputDTO> books, float totalPrice, string typePurchase, int countBook)
+        public BooksPurcheseOutputDTO(List<BaseBookOutputDTO> books)
         {
             Books = books;
-            TotalPrice = (float)System.Math.Round(totalPrice, 2);
-            TypePurchase = typePurchase;
-            CountBook = countBook;
+            CountBook = Books.Sum(book => book.Cuantity);
+            TypePurchase = CountBook <= 0 ? "----" : (CountBook < 10 && CountBook >= 0 ? "Compra al detal" : "Compra al por mayor");
+
+            TotalPrice = (float)System.Math.Round(books.Sum(item => item.UnitPrice*item.Cuantity),2);
+
+
+
         }
 
     }
