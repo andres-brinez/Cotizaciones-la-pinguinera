@@ -13,6 +13,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         public string NameProvider { get; set; } = string.Empty;
         public int Seniority { get; set; }
         public float Discount { get; set; } = 0;
+        public int Cuantity { get; set; }
         public BaseBookType Type { get; set; } 
 
 
@@ -24,12 +25,13 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
             
         }
 
-        protected BaseBook(string title, int originalPrice, string nameProvider, int seniority, BaseBookType type)
+        protected BaseBook(string title, int originalPrice, string nameProvider, int seniority, int cuantity,BaseBookType type)
         {
             Title = title;
             OriginalPrice = originalPrice;
             NameProvider = nameProvider;
             Seniority = seniority;
+            Cuantity = cuantity;
             Type = type;
 
             _discountStrategies = new List<IDiscountStrategy>
@@ -48,8 +50,13 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             foreach (var strategy in _discountStrategies)
             {
+                Console.WriteLine("");
+                Console.WriteLine("Seniority: " + Seniority);
+
                 if (strategy.CanApply(Seniority))
                 {
+
+                    Console.WriteLine(strategy);
                     Discount = strategy.Apply();
                     break;
                 }

@@ -7,22 +7,28 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO
 
         public string Title { get; set; }
         public BaseBookType Type { get; set; }
-        public float Price { get; set; }
+        public float UnitPrice { get; set; }
+        public float TotalPrice { get; set; }
+        public int Cuantity { get; set; }
         public string Discount { get; set; }
 
         public BaseBookOutputDTO()
         {
 
         }
-        public BaseBookOutputDTO(string title, BaseBookType type,  float price, float discount)
+        public BaseBookOutputDTO(string title, BaseBookType type,  float price, float discount, int cuantity)
         {
 
             Title = title;
             Type = type;
-            Price = (float)System.Math.Round(price, 2);
+
+            UnitPrice = (float)System.Math.Round(price, 2);
+            Cuantity = cuantity;
+            TotalPrice = (float)System.Math.Round(UnitPrice * Cuantity, 2);
 
             float discountPercentage = discount * 100;
             Discount = discountPercentage.ToString() + "%";
+            Cuantity = cuantity;
         }
 
     }
