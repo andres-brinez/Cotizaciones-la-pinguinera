@@ -6,7 +6,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
     public class BaseBookInputDTO
     {
 
-
+        public string Id { get; set; } = string.Empty;
         public string NameProvider { get; set; } = string.Empty;
         public int Seniority { get; set; }
         public string Title { get; set; } = string.Empty;
@@ -20,8 +20,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
 
         }
 
-        public BaseBookInputDTO(string nameProvider, int seniority, string title, int originalPrice, int cuantity, BaseBookType type)
+        public BaseBookInputDTO(string Id,string nameProvider, int seniority, string title, int originalPrice, int cuantity, BaseBookType type)
         {
+            Id = Id;
             NameProvider = nameProvider;
             Seniority = seniority;
             Title = title;
@@ -34,6 +35,8 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
         {
             public BaseBookDTOValidator()
             {
+                RuleFor(x => x.Id).NotNull().NotEmpty().WithMessage("El id del libro es requerido");
+
                 RuleFor(x => x.NameProvider).NotNull().NotEmpty().WithMessage("El nombre del proveedor es requerido");
                 RuleFor(x => x.Seniority).NotNull().WithMessage("La antiguedad del proveedor es requerida");
                 RuleFor(x => x.Seniority).GreaterThan(-1).WithMessage("La antiguedad del proveedor no puede ser negativa ");

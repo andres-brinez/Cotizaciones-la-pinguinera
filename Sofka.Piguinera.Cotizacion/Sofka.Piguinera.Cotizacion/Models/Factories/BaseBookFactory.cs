@@ -7,12 +7,12 @@ namespace Sofka.Piguinera.Cotizacion.Models.Factories
     public class BaseBookFactory : IBaseBookFactory
     {
 
-        public BaseBook Create(BaseBookInputDTO payload)
+        public BaseBookEntity Create(BaseBookInputDTO payload)
         {
-            var booksChildren = new Dictionary<BaseBookType, BaseBook>
+            var booksChildren = new Dictionary<BaseBookType, BaseBookEntity>
             {
-                {BaseBookType.Book, new Book(payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority,payload.Cuantity)},
-                {BaseBookType.Novel, new Novel(payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority,payload.Cuantity)},
+                {BaseBookType.Book, new BookEntity(payload.Id,payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority,payload.Cuantity)},
+                {BaseBookType.Novel, new NovelEntity(payload.Id,payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority,payload.Cuantity)},
             };
 
 
