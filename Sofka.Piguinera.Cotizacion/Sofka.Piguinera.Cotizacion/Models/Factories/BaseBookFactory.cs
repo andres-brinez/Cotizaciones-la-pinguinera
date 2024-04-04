@@ -11,8 +11,8 @@ namespace Sofka.Piguinera.Cotizacion.Models.Factories
         {
             var booksChildren = new Dictionary<BaseBookType, BaseBook>
             {
-                {BaseBookType.Book, new Book(payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority)},
-                {BaseBookType.Novel, new Novel(payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority)},
+                {BaseBookType.Book, new Book(payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority,payload.Cuantity)},
+                {BaseBookType.Novel, new Novel(payload.Title,payload.OriginalPrice,payload.NameProvider,payload.Seniority,payload.Cuantity)},
             };
 
 
