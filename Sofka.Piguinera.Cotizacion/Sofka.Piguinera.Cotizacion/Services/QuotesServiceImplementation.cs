@@ -33,15 +33,17 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             var books = payload.Select(item => _baseBookFactory.Create(item)).ToList();  
             
-           // books = books.OrderByDescending(item => item.CurrentPrice).ToList();
             BookPricingService.CalculatePurcheseValue(books);
 
             List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
+           
+            int countBooks = books.Sum(book => book.Cuantity);
 
-            var totalPrice = (float)books.Sum(item => item.CurrentPrice);
-            String typePurchase = books.Count > 10 ? "Compra al por mayor" : "Compra al detal";
+            var totalPriceBooks= (float)books.Sum(item => item.CurrentPrice);
 
-            BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput, totalPrice, typePurchase);
+            String typePurchase = countBooks > 10 ? "Compra al por mayor" : "Compra al detal";
+
+            BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput, totalPriceBooks, typePurchase, countBooks);
 
             return booksPurcheseOutputDTO;
         }
@@ -51,46 +53,68 @@ namespace Sofka.Piguinera.Cotizacion.Services
         {
             var books = payload.Books.Select(item => _baseBookFactory.Create(item)).ToList();
             BookPricingService.CalculatePurcheseValue(books);
-            books = books.OrderByDescending(item => item.Discount).ToList();
 
-            List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
-
+            books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.CurrentPrice).ToList();
             double totalBudgetAvailable = (double)payload.Budget;
-            List<BaseBook> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
+            Console.WriteLine(totalBudgetAvailable);
 
+            List<BaseBookOutputDTO> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
 
-            BookWithBudgeOutputDTO bookWithBudgeOutputDTO = new BookWithBudgeOutputDTO(booksOutput, (float)totalBudgetAvailable);
+            BookWithBudgeOutputDTO bookWithBudgeOutputDTO = new BookWithBudgeOutputDTO(booksAvailable, (float)totalBudgetAvailable);
 
             return bookWithBudgeOutputDTO;
 
         }
 
-        private List<BaseBook> SelectBooksWithinBudget(List<BaseBook> books, ref double totalBudgetAvailable)
+        private List<BaseBookOutputDTO> SelectBooksWithinBudget(List<BaseBook> books, ref double totalBudgetAvailable)
         {
-            List<BaseBook> booksAvailable = new List<BaseBook>();
+            List<BaseBookOutputDTO> booksAvailable = new List<BaseBookOutputDTO>();
             bool hasBook = false;
             bool hasNovel = false;
 
             foreach (var book in books)
             {
-
-                bool isAvailableBudget = totalBudgetAvailable > book.CurrentPrice;
-                bool shouldAddBook = isAvailableBudget && (
-                    (book.Type == BaseBookType.Novel && !hasNovel) ||
-                    (book.Type == BaseBookType.Book && !hasBook) ||
-                    (hasBook && hasNovel));
-
-                if (shouldAddBook)
+                while (totalBudgetAvailable > book.CurrentPrice)
                 {
-                    booksAvailable.Add(book);
-                    totalBudgetAvailable -= book.CurrentPrice;
+                    bool shouldAddBook = (book.Type == BaseBookType.Novel && !hasNovel) ||
+                                         (book.Type == BaseBookType.Book && !hasBook) ||
+                                         (hasBook && hasNovel);
 
-                    bool hasBookAvailable= book.Type == BaseBookType.Novel ? hasNovel = true : hasBook = true;
+                    if (shouldAddBook)
+                    {
+                        var existingBook = booksAvailable.FirstOrDefault(b => b.Title == book.Title && b.Type == book.Type);
+
+                        if (existingBook != null)
+                        {
+                            existingBook.Cuantity++;
+                        }
+                        else
+                        {
+                            BaseBookOutputDTO bookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, 1);
+                            booksAvailable.Add(bookOutputDTO);
+                        }
+
+                        totalBudgetAvailable -= book.CurrentPrice;
+
+                        if (book.Type == BaseBookType.Novel)
+                        {
+                            hasNovel = true;
+                        }
+                        else if (book.Type == BaseBookType.Book)
+                        {
+                            hasBook = true;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
             return booksAvailable;
         }
+
 
     }
 
