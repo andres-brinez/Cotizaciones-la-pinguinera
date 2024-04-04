@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Sofka.Piguinera.Cotizacion.Database;
 using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Services;
@@ -21,6 +22,7 @@ builder.Services.AddScoped<IQuotesService, QuotesServiceImplementation>();
 builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();
 builder.Services.AddSingleton<IValidator<BookWithBudgeInputDTO>, BookWithBudgeInputDTO.BookWithBudgetDTOValidator>();
+builder.Services.AddSingleton<IValidator<InformationInputDto>, InformationInputDto.InformationInputDtoValidator>();
 
 // Add Swagger services
 builder.Services.AddSwaggerGen(c =>
