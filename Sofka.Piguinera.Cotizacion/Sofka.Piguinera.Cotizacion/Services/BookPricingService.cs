@@ -9,7 +9,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             int countBooks = 0;
 
-
             for (int i = 0; i < books.Count; i++)
             {
                 books[i].CalculateTotalPrice();
@@ -42,7 +41,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             book.Discount += (float)BULK_DECREASE_PER_UNIT;
             book.CurrentPrice -= discount;
-            Console.WriteLine("Book current price con descuento : " + book.CurrentPrice);
 
         }
     }
