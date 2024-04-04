@@ -7,7 +7,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
     public interface IQuotesService
     {
 
-        BaseBookOutputDTO TotalPricePurchese(BaseBookInputDTO payload);
+       Task<BaseBookOutputDTO> TotalPricePurchese(BaseBookInputDTO payload);
 
         BooksPurcheseOutputDTO TotalPricePurcheses(List<BaseBookInputDTO> payload);
 
