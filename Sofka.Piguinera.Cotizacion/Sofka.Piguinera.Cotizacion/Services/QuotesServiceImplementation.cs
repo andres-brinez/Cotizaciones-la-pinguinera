@@ -56,7 +56,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.CurrentPrice).ToList();
             double totalBudgetAvailable = (double)payload.Budget;
-            Console.WriteLine(totalBudgetAvailable);
 
             List<BaseBookOutputDTO> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
 
@@ -82,28 +81,9 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
                     if (shouldAddBook)
                     {
-                        var existingBook = booksAvailable.FirstOrDefault(b => b.Title == book.Title && b.Type == book.Type);
-
-                        if (existingBook != null)
-                        {
-                            existingBook.Cuantity++;
-                        }
-                        else
-                        {
-                            BaseBookOutputDTO bookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, 1);
-                            booksAvailable.Add(bookOutputDTO);
-                        }
-
+                        UpdateBookQuantity(booksAvailable, book);
                         totalBudgetAvailable -= book.CurrentPrice;
-
-                        if (book.Type == BaseBookType.Novel)
-                        {
-                            hasNovel = true;
-                        }
-                        else if (book.Type == BaseBookType.Book)
-                        {
-                            hasBook = true;
-                        }
+                        ValidateTypeBook(book, ref hasBook, ref hasNovel);
                     }
                     else
                     {
@@ -115,6 +95,33 @@ namespace Sofka.Piguinera.Cotizacion.Services
             return booksAvailable;
         }
 
+
+        private void UpdateBookQuantity(List<BaseBookOutputDTO> booksAvailable, BaseBook book)
+        {
+            var existingBook = booksAvailable.FirstOrDefault(b => b.Title == book.Title && b.Type == book.Type);
+
+            if (existingBook != null)
+            {
+                existingBook.Cuantity++;
+            }
+            else
+            {
+                BaseBookOutputDTO bookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, 1);
+                booksAvailable.Add(bookOutputDTO);
+            }
+        }
+
+        private void ValidateTypeBook(BaseBook book, ref bool hasBook, ref bool hasNovel)
+        {
+            if (book.Type == BaseBookType.Novel)
+            {
+                hasNovel = true;
+            }
+            else if (book.Type == BaseBookType.Book)
+            {
+                hasBook = true;
+            }
+        }
 
     }
 
