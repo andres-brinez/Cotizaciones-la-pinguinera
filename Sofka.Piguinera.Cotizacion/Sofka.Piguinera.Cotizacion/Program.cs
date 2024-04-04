@@ -1,6 +1,8 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Sofka.Piguinera.Cotizacion.Database;
+using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Services;
@@ -11,8 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IQuotesService, QuotesServiceImplementation>();
-builder.Services.AddSingleton<IBaseBookFactory, BaseBookFactory>();
+
+builder.Services.AddDbContext<Database>(options => options.UseSqlServer(builder.Configuration["SQLConnectionString"]));
+builder.Services.AddScoped<IDatabase, Database>();
+
+builder.Services.AddScoped<IQuotesService, QuotesServiceImplementation>();
+builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();
 builder.Services.AddSingleton<IValidator<BookWithBudgeInputDTO>, BookWithBudgeInputDTO.BookWithBudgetDTOValidator>();
 
