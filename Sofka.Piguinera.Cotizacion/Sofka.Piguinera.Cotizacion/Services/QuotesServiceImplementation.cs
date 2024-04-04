@@ -1,4 +1,5 @@
 ﻿using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
@@ -64,22 +65,58 @@ namespace Sofka.Piguinera.Cotizacion.Services
             return baseBookOutputDTO;
         }
 
-        public BooksPurcheseOutputDTO TotalPricePurcheses(List<BaseBookInputDTO> payload)
+        public BooksPurcheseOutputDTO TotalPricePurcheses(List<InformationInputDto> payload)
         {
+            var books = new List<BaseBookEntity>();
 
-            var books = payload.Select(item => _baseBookFactory.Create(item)).ToList();  
+
+            foreach (var informationBook in payload)
+            {
+                BookPersistence bookPersistence = new BookPersistence();
+
+                bookPersistence = _database.Books.FirstOrDefault(b => b.Id == informationBook.Id); // obtiene el libro de la base de datos
+
             
+                if (bookPersistence != null)
+                {
+                    var baseBookFactory = new BaseBookFactory();
+
+                    // Se pasa la información del libro de la base de datos a un objeto de tipo BaseBookEntity
+
+                    BaseBookEntity bookEntity = baseBookFactory.Create(
+                        new BaseBookInputDTO
+                        {
+                            Id = bookPersistence.Id,
+                            Title = bookPersistence.Title,
+                            OriginalPrice = (int)bookPersistence.OriginalPrice,
+                            NameProvider = bookPersistence.NameProvider,
+                            Seniority = (int)bookPersistence.Seniority,
+                            Cuantity = informationBook.Cuantity,
+                            Type = (BaseBookType)bookPersistence.Type
+                        }
+                    );
+
+
+                    bookEntity.CurrentPrice = (float)bookPersistence.UnitPrice* informationBook.Cuantity;
+                    bookEntity.Discount = (float)bookPersistence.Discount;
+                    bookEntity.CalculateTotalPrice();
+
+                    books.Add(bookEntity);
+                }
+             
+            }
+ 
+
+            foreach (var book in books)
+            {
+                Console.WriteLine(book.ToString());
+            }
+
             BookPricingService.CalculatePurcheseValue(books);
 
             List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
-           
-            int countBooks = books.Sum(book => book.Cuantity);
-
-            var totalPriceBooks= (float)books.Sum(item => item.CurrentPrice);
-
-            String typePurchase = countBooks > 10 ? "Compra al por mayor" : "Compra al detal";
-
-            BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput, totalPriceBooks, typePurchase, countBooks);
+           Console.WriteLine(booksOutput.Count);
+            BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput);
 
             return booksPurcheseOutputDTO;
         }
