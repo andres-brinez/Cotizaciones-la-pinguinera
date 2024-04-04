@@ -25,8 +25,8 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO
             UnitPrice = (float)System.Math.Round(price, 2);
             Cuantity = cuantity;
             TotalPrice = (float)System.Math.Round(UnitPrice * Cuantity, 2);
-
-            float discountPercentage = discount * 100;
+               
+            float discountPercentage = (float)System.Math.Round(discount * 100, 0); 
             Discount = discountPercentage.ToString() + "%";
             Cuantity = cuantity;
         }
