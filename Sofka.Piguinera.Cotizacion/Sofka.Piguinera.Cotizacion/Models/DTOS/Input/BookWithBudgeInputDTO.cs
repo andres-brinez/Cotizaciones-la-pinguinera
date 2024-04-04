@@ -22,7 +22,12 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
             public BookWithBudgetDTOValidator()
             {
                 RuleFor(x => x.Books).NotNull().WithMessage("La lista de libros no puede ser nula");
+                RuleForEach(x => x.Books).SetValidator(new BaseBookInputDTO.BaseBookDTOValidator());
+
                 RuleFor(x => x.Budget).GreaterThanOrEqualTo(0).WithMessage("El presupuesto no puede ser negativo");
+                RuleFor(x => x.Budget).NotNull().WithMessage("El presupuesto no puede ser nulo");
+                RuleFor(x => x.Budget).NotEmpty().WithMessage("El presupuesto no puede ser vacio");
+
             }
         }
     }
