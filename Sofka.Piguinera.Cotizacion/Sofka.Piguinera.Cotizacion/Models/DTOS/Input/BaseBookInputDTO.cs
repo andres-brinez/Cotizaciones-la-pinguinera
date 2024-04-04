@@ -35,6 +35,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
                 RuleFor(x => x.Title).NotNull().NotEmpty().WithMessage("El titulo del libro es requerido");
                 RuleFor(x => x.OriginalPrice).NotEmpty().WithMessage("El precio original del libro es requerido");
                 RuleFor(x => x.OriginalPrice).GreaterThan(0).WithMessage("El precio original del libro debe ser mayor a 0");
+                // base book type es requerido
+                RuleFor(x => x.Type).NotNull().WithMessage("El tipo de libro es requerido");
+                RuleFor(x => x.Type).IsInEnum().WithMessage("El tipo de libro no es valido");
             }
         }
 
