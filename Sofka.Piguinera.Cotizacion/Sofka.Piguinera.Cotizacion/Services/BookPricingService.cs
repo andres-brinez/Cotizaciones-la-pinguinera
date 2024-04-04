@@ -4,7 +4,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
 {
     public  static class BookPricingService
     {
-        public static List<BaseBook> CalculatePurcheseValue(List<BaseBook> books)
+        public static List<BaseBookEntity> CalculatePurcheseValue(List<BaseBookEntity> books)
         {
 
             int countBooks = 0;
@@ -28,13 +28,13 @@ namespace Sofka.Piguinera.Cotizacion.Services
             return books;
         }
 
-        public static void ApplyRetailIncrease(BaseBook book)
+        public static void ApplyRetailIncrease(BaseBookEntity book)
         {
             const float RETAIL_INCREASE = 1.02f;
             book.CurrentPrice *= RETAIL_INCREASE;
         }
 
-        private static  void ApplyBulkDecrease(BaseBook book)
+        private static  void ApplyBulkDecrease(BaseBookEntity book)
         {
             const float BULK_DECREASE_PER_UNIT = 0.15f;
             var discount = book.CurrentPrice * BULK_DECREASE_PER_UNIT;
