@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
@@ -20,12 +21,14 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         private readonly IQuotesService _quotesService;
         private readonly IValidator<BaseBookInputDTO> _validator;
         private readonly IValidator<BookWithBudgeInputDTO> _validatorBudget;
+        private readonly IValidator<InformationInputDto> _validatorInformation;
 
-        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget)
+        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation)
         {
             _quotesService = quotesService;
             _validator = validator;
             _validatorBudget = validatorBudget;
+            _validatorInformation = validatorInformation;
         }
 
 
@@ -66,18 +69,17 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Returns a string with the total price of all the books, including details about each book, its discount, and its new price.", typeof(BooksPurcheseOutputDTO))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "If the item is null")]
 
-        public async Task<ActionResult> CalculateTotalPriceBook([FromBody, SwaggerParameter("The list of book details.", Required = true)] List<BaseBookInputDTO> payload)
+        public async Task<ActionResult> CalculateTotalPriceBook([FromBody, SwaggerParameter("The list of book details.", Required = true)] List<InformationInputDto> payload)
         {
             foreach (var item in payload)
             {
-                var validationResult = await _validator.ValidateAsync(item);
+                var validationResult = await _validatorInformation.ValidateAsync(item);
 
                 if (!validationResult.IsValid)
                 {
                     return BadRequest(validationResult.Errors);
                 }
             }
-
 
             var result = _quotesService.TotalPricePurcheses(payload);
             return Ok(result);
