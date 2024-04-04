@@ -7,11 +7,16 @@ namespace Sofka.Piguinera.Cotizacion.Services
         public static List<BaseBook> CalculatePurcheseValue(List<BaseBook> books)
         {
 
+            int countBooks = 0;
+
+
             for (int i = 0; i < books.Count; i++)
             {
                 books[i].CalculateTotalPrice();
+                countBooks += books[i].Cuantity;
 
-                if (i >= 10)
+
+                if (i >= 10 || countBooks > 10)
                 {
                     ApplyBulkDecrease(books[i]);
                 }
@@ -37,6 +42,8 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             book.Discount += (float)BULK_DECREASE_PER_UNIT;
             book.CurrentPrice -= discount;
+            Console.WriteLine("Book current price con descuento : " + book.CurrentPrice);
+
         }
     }
 
