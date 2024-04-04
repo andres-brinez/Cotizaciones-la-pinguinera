@@ -47,7 +47,13 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var result = _quotesService.TotalPricePurchese(payload);
+            var result = await _quotesService.TotalPricePurchese(payload);
+            // validacion
+            if (result == null)
+            {
+                return BadRequest("Error al guardar en la base de datos");
+            }
+
             return Ok(result);
         }
 
