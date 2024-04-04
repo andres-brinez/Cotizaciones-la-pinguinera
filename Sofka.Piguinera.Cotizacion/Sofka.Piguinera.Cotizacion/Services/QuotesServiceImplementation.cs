@@ -1,29 +1,65 @@
-﻿using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
+﻿using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
+using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
+using Sofka.Piguinera.Cotizacion.Models.Persistence;
 namespace Sofka.Piguinera.Cotizacion.Services
 {
     public class QuotesServiceImplementation : IQuotesService
     {
 
         private readonly IBaseBookFactory _baseBookFactory;
+        private readonly IDatabase _database;
 
-        public QuotesServiceImplementation(IBaseBookFactory baseBookFactory)
+
+        public QuotesServiceImplementation(IBaseBookFactory baseBookFactory, IDatabase database)
         {
             _baseBookFactory = baseBookFactory;
+            _database = database;
         }
         
-        public BaseBookOutputDTO TotalPricePurchese(BaseBookInputDTO payload)
+        public async Task<BaseBookOutputDTO> TotalPricePurchese(BaseBookInputDTO payload)
         {
-            var book= _baseBookFactory.Create(payload);
+            var bookEntity= _baseBookFactory.Create(payload);
 
-            book.CalculateTotalPrice();
+            bookEntity.CalculateTotalPrice();
 
-            BookPricingService.ApplyRetailIncrease(book);
+            BookPricingService.ApplyRetailIncrease(bookEntity);
 
-            BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice,book.Discount, book.Cuantity);
+            BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(bookEntity.Title, bookEntity.Type, bookEntity.CurrentPrice,bookEntity.Discount, bookEntity.Cuantity);
+
+            Console.WriteLine( bookEntity.Discount);
+
+            
+            var bookPersistence = new BookPersistence
+            {
+                Id = bookEntity.Id,
+                Title = baseBookOutputDTO.Title,
+                NameProvider = bookEntity.NameProvider,
+                Seniority = bookEntity.Seniority,
+                OriginalPrice = bookEntity.OriginalPrice,
+                Quantity = bookEntity.Cuantity,
+                Type = (byte)bookEntity.Type,
+                UnitPrice = bookEntity.CurrentPrice,
+                Discount = bookEntity.Discount,
+            };
+
+            try
+            {
+                await _database.Books.AddAsync(bookPersistence);
+                if (!await _database.SaveAsync())
+                {
+                    return null;
+                }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
 
             return baseBookOutputDTO;
         }
@@ -65,7 +101,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         }
 
-        private List<BaseBookOutputDTO> SelectBooksWithinBudget(List<BaseBook> books, ref double totalBudgetAvailable)
+        private List<BaseBookOutputDTO> SelectBooksWithinBudget(List<BaseBookEntity> books, ref double totalBudgetAvailable)
         {
             List<BaseBookOutputDTO> booksAvailable = new List<BaseBookOutputDTO>();
             bool hasBook = false;
@@ -96,7 +132,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
         }
 
 
-        private void UpdateBookQuantity(List<BaseBookOutputDTO> booksAvailable, BaseBook book)
+        private void UpdateBookQuantity(List<BaseBookOutputDTO> booksAvailable, BaseBookEntity book)
         {
             var existingBook = booksAvailable.FirstOrDefault(b => b.Title == book.Title && b.Type == book.Type);
 
@@ -111,7 +147,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
             }
         }
 
-        private void ValidateTypeBook(BaseBook book, ref bool hasBook, ref bool hasNovel)
+        private void ValidateTypeBook(BaseBookEntity book, ref bool hasBook, ref bool hasNovel)
         {
             if (book.Type == BaseBookType.Novel)
             {
