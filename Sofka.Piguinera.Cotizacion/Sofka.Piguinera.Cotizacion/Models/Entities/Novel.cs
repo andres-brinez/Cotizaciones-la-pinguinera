@@ -17,9 +17,6 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
            
             CurrentPrice = (float)(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
 
-            Console.WriteLine(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
-
-
         }
 
 

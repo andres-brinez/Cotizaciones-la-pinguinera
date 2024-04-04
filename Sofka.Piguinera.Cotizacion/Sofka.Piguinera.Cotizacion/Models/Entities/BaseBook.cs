@@ -50,13 +50,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             foreach (var strategy in _discountStrategies)
             {
-                Console.WriteLine("");
-                Console.WriteLine("Seniority: " + Seniority);
 
                 if (strategy.CanApply(Seniority))
                 {
-
-                    Console.WriteLine(strategy);
                     Discount = strategy.Apply();
                     break;
                 }
