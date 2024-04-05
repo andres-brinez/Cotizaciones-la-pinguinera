@@ -23,58 +23,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
         }
         
    
-
-        public BooksPurcheseOutputDTO TotalPriceQuotes(List<InformationInputDto> payload)
-        {
-            var books = new List<BaseBookEntity>();
-
-
-            foreach (var informationBook in payload)
-            {
-                BookPersistence bookPersistence = new BookPersistence();
-
-                bookPersistence = _database.Books.FirstOrDefault(b => b.Id == informationBook.Id); // obtiene el libro de la base de datos
-
-            
-                if (bookPersistence != null)
-                {
-                    var baseBookFactory = new BaseBookFactory();
-
-                    // Se pasa la información del libro de la base de datos a un objeto de tipo BaseBookEntity
-
-                    BaseBookEntity bookEntity = baseBookFactory.Create(
-                        new BaseBookInputDTO
-                        {
-                            Id = bookPersistence.Id,
-                            Title = bookPersistence.Title,
-                            OriginalPrice = (int)bookPersistence.OriginalPrice,
-                            NameProvider = bookPersistence.NameProvider,
-                            Seniority = (int)bookPersistence.Seniority,
-                            Quantity = informationBook.Cuantity,
-                            Type = (BaseBookType)bookPersistence.Type
-                        }
-                    );
-
-
-                    bookEntity.CurrentPrice = (float)bookPersistence.UnitPrice* informationBook.Cuantity;
-                    bookEntity.Discount = (float)bookPersistence.Discount;
-                    bookEntity.CalculateTotalPrice();
-
-                    books.Add(bookEntity);
-                }
-             
-            }
-
-            BookPricingService.CalculatePurcheseValue(books);
-
-            List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
-            
-            BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput);
-
-            return booksPurcheseOutputDTO;
-        }
-
-
         public BookWithBudgeOutputDTO BooksBudget(BookWithBudgeInputDTO payload)
         {
 

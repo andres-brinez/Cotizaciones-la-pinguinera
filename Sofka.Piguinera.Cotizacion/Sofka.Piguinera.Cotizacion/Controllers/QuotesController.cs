@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
-using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
@@ -20,17 +19,22 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
     {
         private readonly IQuotesService _quotesService;
         private readonly ITotalPriceQuotationService _totalPriceQuotationService;
+        private readonly ITotalPriceQuotesService _totalPriceQuotesService;
+
         private readonly IValidator<BaseBookInputDTO> _validator;
         private readonly IValidator<BookWithBudgeInputDTO> _validatorBudget;
         private readonly IValidator<InformationInputDto> _validatorInformation;
 
-        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService)
+        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService, ITotalPriceQuotesService totalPriceQuotesService)
         {
             _quotesService = quotesService;
+            _totalPriceQuotesService = totalPriceQuotesService;
+            _totalPriceQuotationService = totalPriceQuotationService;
+
+
             _validator = validator;
             _validatorBudget = validatorBudget;
             _validatorInformation = validatorInformation;
-            _totalPriceQuotationService = totalPriceQuotationService;
         }
 
 
@@ -70,7 +74,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         [SwaggerOperation(Summary = "Calculate the total price of multiple books", Description = "This method takes a list of BaseBookDTO objects as input, validates each one, and then calculates the total price of all the books.")]
         [SwaggerResponse(StatusCodes.Status200OK, "Returns a string with the total price of all the books, including details about each book, its discount, and its new price.", typeof(BooksPurcheseOutputDTO))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "If the item is null")]
-
         public async Task<ActionResult> CalculateTotalPriceBook([FromBody, SwaggerParameter("The list of book details.", Required = true)] List<InformationInputDto> payload)
         {
             foreach (var item in payload)
@@ -83,7 +86,8 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 }
             }
 
-            var result = _quotesService.TotalPriceQuotes(payload);
+            var result = _totalPriceQuotesService.CalculateTotalPriceQuotes(payload);
+
             return Ok(result);
         }
 

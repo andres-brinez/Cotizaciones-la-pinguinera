@@ -21,6 +21,7 @@ builder.Services.AddScoped<IDatabase, Database>();
 
 builder.Services.AddScoped<IQuotesService, QuotesServiceImplementation>();
 builder.Services.AddScoped<ITotalPriceQuotationService, TotalPriceQuotationService>();
+builder.Services.AddScoped<ITotalPriceQuotesService, TotalPriceQuotesService>();
 
 builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();
