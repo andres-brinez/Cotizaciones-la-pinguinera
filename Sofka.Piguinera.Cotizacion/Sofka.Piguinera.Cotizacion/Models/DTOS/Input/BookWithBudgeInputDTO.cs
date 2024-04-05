@@ -4,16 +4,16 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
 {
     public class BookWithBudgeInputDTO
     {
-        public List<BaseBookInputDTO> Books { get; set; }
+        public List<string> IdBooks { get; set; }
         public decimal Budget { get; set; }
 
         public BookWithBudgeInputDTO()
         {
         }
 
-        public BookWithBudgeInputDTO(List<BaseBookInputDTO> book, decimal budget)
+        public BookWithBudgeInputDTO(List<string> idsBooks, decimal budget)
         {
-            Books = book;
+            IdBooks = idsBooks;
             Budget = budget;
         }
 
@@ -21,12 +21,11 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
         {
             public BookWithBudgetDTOValidator()
             {
-                RuleFor(x => x.Books).NotNull().WithMessage("La lista de libros no puede ser nula");
-                RuleForEach(x => x.Books).SetValidator(new BaseBookInputDTO.BaseBookDTOValidator());
 
-                RuleFor(x => x.Budget).GreaterThanOrEqualTo(0).WithMessage("El presupuesto no puede ser negativo");
-                RuleFor(x => x.Budget).NotNull().WithMessage("El presupuesto no puede ser nulo");
-                RuleFor(x => x.Budget).NotEmpty().WithMessage("El presupuesto no puede ser vacio");
+                RuleFor(x => x.IdBooks).NotNull().NotEmpty().WithMessage("El id del libro es requerido");
+                RuleFor(x => x.Budget).NotEmpty().WithMessage("El presupuesto es requerido");
+                RuleFor(x => x.Budget).GreaterThan(0).WithMessage("El presupuesto debe ser mayor a 0");
+               
 
             }
         }
