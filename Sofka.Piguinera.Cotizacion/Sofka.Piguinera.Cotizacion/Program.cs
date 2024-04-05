@@ -7,6 +7,7 @@ using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Services;
+using Sofka.Piguinera.Cotizacion.Services.Interface;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<Database>(options => options.UseSqlServer(builder.
 builder.Services.AddScoped<IDatabase, Database>();
 
 builder.Services.AddScoped<IQuotesService, QuotesServiceImplementation>();
+builder.Services.AddScoped<ITotalPriceQuotationService, TotalPriceQuotationService>();
+
 builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();
 builder.Services.AddSingleton<IValidator<BookWithBudgeInputDTO>, BookWithBudgeInputDTO.BookWithBudgetDTOValidator>();
