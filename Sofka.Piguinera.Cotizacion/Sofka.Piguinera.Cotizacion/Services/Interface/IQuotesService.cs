@@ -9,8 +9,6 @@ namespace Sofka.Piguinera.Cotizacion.Services.Interface
     {
 
 
-        BooksPurcheseOutputDTO TotalPriceQuotes(List<InformationInputDto> payload);
-
         BookWithBudgeOutputDTO BooksBudget(BookWithBudgeInputDTO payload);
 
     }

@@ -21,7 +21,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
         private readonly Mock<IBaseBookFactory> _factoryMock;
         private readonly Mock<DbSet<BookPersistence>> _dbSetMock;
         private readonly Mock<IDatabase> _databaseMock;
-        private readonly ITotalPriceQuotationService _payrollService;
+        private readonly ITotalPriceQuotationService service;
 
         public TotalPriceQuotationServiceTests()
         {
@@ -29,7 +29,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
             _factoryMock = new Mock<IBaseBookFactory>();
             _databaseMock = new Mock<IDatabase>();
             _databaseMock.SetupGet(database => database.Books).Returns(_dbSetMock.Object);
-            _payrollService = new TotalPriceQuotationService(_factoryMock.Object, _databaseMock.Object);
+            service = new TotalPriceQuotationService(_factoryMock.Object, _databaseMock.Object);
 
 
         }
@@ -50,7 +50,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
               .Setup(database => database.SaveAsync())
               .Returns(Task.FromResult(true));
 
-            var result = await _payrollService.CalculateTotalPriceQuotation(employeeDTO);
+            var result = await service.CalculateTotalPriceQuotation(employeeDTO);
 
             Assert.NotNull(result);
             Assert.IsType<BaseBookOutputDTO>(result);
@@ -76,7 +76,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
                .Setup(database => database.SaveAsync())
                .Throws(new Exception("Database error"));
 
-            var result = await _payrollService.CalculateTotalPriceQuotation(bookDTO);
+            var result = await service.CalculateTotalPriceQuotation(bookDTO);
 
             Assert.Null(result);
         }
@@ -84,7 +84,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
         [Fact]
         public async Task CalculateTotalPriceQuotation_ShouldThrowException_WhenCalledWithNull()
         {
-            await Assert.ThrowsAsync<NullReferenceException>(() => _payrollService.CalculateTotalPriceQuotation(null));
+            await Assert.ThrowsAsync<NullReferenceException>(() => service.CalculateTotalPriceQuotation(null));
         }
 
     }
