@@ -6,6 +6,7 @@ using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
+using Sofka.Piguinera.Cotizacion.Services.Interface;
 namespace Sofka.Piguinera.Cotizacion.Services
 {
     public class QuotesServiceImplementation : IQuotesService
@@ -21,48 +22,9 @@ namespace Sofka.Piguinera.Cotizacion.Services
             _database = database;
         }
         
-        public async Task<BaseBookOutputDTO> TotalPricePurchese(BaseBookInputDTO payload)
-        {
-            var bookEntity= _baseBookFactory.Create(payload);
+   
 
-            bookEntity.CalculateTotalPrice();
-
-            BookPricingService.ApplyRetailIncrease(bookEntity);
-
-            BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(bookEntity.Title, bookEntity.Type, bookEntity.CurrentPrice,bookEntity.Discount, bookEntity.Cuantity);
-
-            var bookPersistence = new BookPersistence
-            {
-                Id = bookEntity.Id,
-                Title = baseBookOutputDTO.Title,
-                NameProvider = bookEntity.NameProvider,
-                Seniority = bookEntity.Seniority,
-                OriginalPrice = bookEntity.OriginalPrice,
-                Quantity = bookEntity.Cuantity,
-                Type = (byte)bookEntity.Type,
-                UnitPrice = bookEntity.CurrentPrice,
-                Discount = bookEntity.Discount,
-            };
-
-            try
-            {
-                await _database.Books.AddAsync(bookPersistence);
-                if (!await _database.SaveAsync())
-                {
-                    return null;
-                }
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-
-            return baseBookOutputDTO;
-        }
-
-        public BooksPurcheseOutputDTO TotalPricePurcheses(List<InformationInputDto> payload)
+        public BooksPurcheseOutputDTO TotalPriceQuotes(List<InformationInputDto> payload)
         {
             var books = new List<BaseBookEntity>();
 
@@ -102,7 +64,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
                 }
              
             }
- 
+
             BookPricingService.CalculatePurcheseValue(books);
 
             List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
@@ -186,17 +148,10 @@ namespace Sofka.Piguinera.Cotizacion.Services
                 while (totalBudgetAvailable > book.CurrentPrice)
                 {
 
-                    Console.WriteLine($"Total Budget Available: {totalBudgetAvailable}");
-                    Console.WriteLine($"Current Price: {book.CurrentPrice}");
-                    Console.WriteLine($"prueba:{totalBudgetAvailable} >{book.CurrentPrice}");
-                    Console.WriteLine(totalBudgetAvailable > book.CurrentPrice);
-
-
                     bool shouldAddBook = (book.Type == BaseBookType.Novel && !hasNovel) ||
                                          (book.Type == BaseBookType.Book && !hasBook) ||
                                          (hasBook && hasNovel);
 
-                    Console.WriteLine($"Should Add Book: {shouldAddBook}");
 
                     if (shouldAddBook)
                     {
