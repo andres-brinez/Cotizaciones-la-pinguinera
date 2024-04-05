@@ -12,13 +12,11 @@ namespace Sofka.Piguinera.Cotizacion.Services
     public class BooksBudgetService : IBooksBudgetService
     {
 
-        private readonly IBaseBookFactory _baseBookFactory;
         private readonly IDatabase _database;
 
 
-        public BooksBudgetService(IBaseBookFactory baseBookFactory, IDatabase database)
+        public BooksBudgetService(IDatabase database)
         {
-            _baseBookFactory = baseBookFactory;
             _database = database;
         }
         
