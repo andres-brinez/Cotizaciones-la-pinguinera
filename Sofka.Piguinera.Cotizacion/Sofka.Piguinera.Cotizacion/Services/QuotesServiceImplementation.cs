@@ -31,9 +31,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
             BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(bookEntity.Title, bookEntity.Type, bookEntity.CurrentPrice,bookEntity.Discount, bookEntity.Cuantity);
 
-            Console.WriteLine( bookEntity.Discount);
-
-            
             var bookPersistence = new BookPersistence
             {
                 Id = bookEntity.Id,
@@ -91,7 +88,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
                             OriginalPrice = (int)bookPersistence.OriginalPrice,
                             NameProvider = bookPersistence.NameProvider,
                             Seniority = (int)bookPersistence.Seniority,
-                            Cuantity = informationBook.Cuantity,
+                            Quantity = informationBook.Cuantity,
                             Type = (BaseBookType)bookPersistence.Type
                         }
                     );
@@ -106,16 +103,10 @@ namespace Sofka.Piguinera.Cotizacion.Services
              
             }
  
-
-            foreach (var book in books)
-            {
-                Console.WriteLine(book.ToString());
-            }
-
             BookPricingService.CalculatePurcheseValue(books);
 
             List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
-           Console.WriteLine(booksOutput.Count);
+            
             BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput);
 
             return booksPurcheseOutputDTO;
@@ -124,10 +115,54 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         public BookWithBudgeOutputDTO BooksBudget(BookWithBudgeInputDTO payload)
         {
-            var books = payload.Books.Select(item => _baseBookFactory.Create(item)).ToList();
+
+            var books = new List<BaseBookEntity>();
+
+            foreach (var idBook in payload.IdBooks)
+            {
+                BookPersistence bookPersistence = new BookPersistence();
+
+                bookPersistence = _database.Books.FirstOrDefault(b => b.Id == idBook); // obtiene el libro de la base de datos
+
+                if (bookPersistence != null)
+                {
+                    var baseBookFactory = new BaseBookFactory();
+
+                    // Se pasa la información del libro de la base de datos a un objeto de tipo BaseBookEntity
+
+                    BaseBookEntity bookEntity = baseBookFactory.Create(
+                        new BaseBookInputDTO
+                        {
+                            Id = bookPersistence.Id,
+                            Title = bookPersistence.Title,
+                            OriginalPrice = (int)bookPersistence.OriginalPrice,
+                            NameProvider = bookPersistence.NameProvider,
+                            Seniority = (int)bookPersistence.Seniority,
+                            Quantity = (int)bookPersistence.Quantity,
+                            Type = (BaseBookType)bookPersistence.Type
+                        }
+                    );
+
+
+                    bookEntity.CurrentPrice = (float)((float)bookPersistence.UnitPrice * bookPersistence.Quantity);
+                    bookEntity.Discount = (float)bookPersistence.Discount;
+                    
+                    bookEntity.CalculateTotalPrice();
+
+                    books.Add(bookEntity);
+                }
+
+            }
+
             BookPricingService.CalculatePurcheseValue(books);
 
+            List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
+
+            BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput);
+
+
             books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.CurrentPrice).ToList();
+            
             double totalBudgetAvailable = (double)payload.Budget;
 
             List<BaseBookOutputDTO> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
@@ -140,17 +175,28 @@ namespace Sofka.Piguinera.Cotizacion.Services
 
         private List<BaseBookOutputDTO> SelectBooksWithinBudget(List<BaseBookEntity> books, ref double totalBudgetAvailable)
         {
+
             List<BaseBookOutputDTO> booksAvailable = new List<BaseBookOutputDTO>();
             bool hasBook = false;
             bool hasNovel = false;
 
             foreach (var book in books)
             {
+
                 while (totalBudgetAvailable > book.CurrentPrice)
                 {
+
+                    Console.WriteLine($"Total Budget Available: {totalBudgetAvailable}");
+                    Console.WriteLine($"Current Price: {book.CurrentPrice}");
+                    Console.WriteLine($"prueba:{totalBudgetAvailable} >{book.CurrentPrice}");
+                    Console.WriteLine(totalBudgetAvailable > book.CurrentPrice);
+
+
                     bool shouldAddBook = (book.Type == BaseBookType.Novel && !hasNovel) ||
                                          (book.Type == BaseBookType.Book && !hasBook) ||
                                          (hasBook && hasNovel);
+
+                    Console.WriteLine($"Should Add Book: {shouldAddBook}");
 
                     if (shouldAddBook)
                     {
@@ -161,6 +207,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
                     else
                     {
                         break;
+
                     }
                 }
             }
