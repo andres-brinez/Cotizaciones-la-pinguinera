@@ -4,7 +4,7 @@ using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
-using Sofka.Piguinera.Cotizacion.Services;
+using Sofka.Piguinera.Cotizacion.Services.Interface;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
 
@@ -19,16 +19,18 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
     public class QuotesController : ControllerBase
     {
         private readonly IQuotesService _quotesService;
+        private readonly ITotalPriceQuotationService _totalPriceQuotationService;
         private readonly IValidator<BaseBookInputDTO> _validator;
         private readonly IValidator<BookWithBudgeInputDTO> _validatorBudget;
         private readonly IValidator<InformationInputDto> _validatorInformation;
 
-        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation)
+        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService)
         {
             _quotesService = quotesService;
             _validator = validator;
             _validatorBudget = validatorBudget;
             _validatorInformation = validatorInformation;
+            _totalPriceQuotationService = totalPriceQuotationService;
         }
 
 
@@ -50,7 +52,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var result = await _quotesService.TotalPricePurchese(payload);
+            var result = await _totalPriceQuotationService.CalculateTotalPriceQuotation(payload);
             // validacion
             if (result == null)
             {
@@ -81,7 +83,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 }
             }
 
-            var result = _quotesService.TotalPricePurcheses(payload);
+            var result = _quotesService.TotalPriceQuotes(payload);
             return Ok(result);
         }
 
