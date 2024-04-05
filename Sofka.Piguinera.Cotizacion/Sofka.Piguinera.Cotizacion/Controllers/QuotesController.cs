@@ -17,7 +17,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
     [Description("Controller for handling book quote operations.")]
     public class QuotesController : ControllerBase
     {
-        private readonly IQuotesService _quotesService;
+        private readonly IBooksBudgetService _quotesService;
         private readonly ITotalPriceQuotationService _totalPriceQuotationService;
         private readonly ITotalPriceQuotesService _totalPriceQuotesService;
 
@@ -25,7 +25,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         private readonly IValidator<BookWithBudgeInputDTO> _validatorBudget;
         private readonly IValidator<InformationInputDto> _validatorInformation;
 
-        public QuotesController(IQuotesService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService, ITotalPriceQuotesService totalPriceQuotesService)
+        public QuotesController(IBooksBudgetService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService, ITotalPriceQuotesService totalPriceQuotesService)
         {
             _quotesService = quotesService;
             _totalPriceQuotesService = totalPriceQuotesService;
@@ -88,6 +88,11 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
             var result = _totalPriceQuotesService.CalculateTotalPriceQuotes(payload);
 
+            if (result == null)
+            {
+                return BadRequest("Error al guardar en la base de datos");
+            }
+
             return Ok(result);
         }
 
@@ -111,6 +116,12 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
             }
 
             var result = _quotesService.BooksBudget(payload);
+
+            if (result == null)
+            {
+                return BadRequest("Error al guardar en la base de datos");
+            }
+
             return Ok(result);
         }
 

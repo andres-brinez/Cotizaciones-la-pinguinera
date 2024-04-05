@@ -9,14 +9,14 @@ using Sofka.Piguinera.Cotizacion.Models.Persistence;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
 namespace Sofka.Piguinera.Cotizacion.Services
 {
-    public class QuotesServiceImplementation : IQuotesService
+    public class BooksBudgetService : IBooksBudgetService
     {
 
         private readonly IBaseBookFactory _baseBookFactory;
         private readonly IDatabase _database;
 
 
-        public QuotesServiceImplementation(IBaseBookFactory baseBookFactory, IDatabase database)
+        public BooksBudgetService(IBaseBookFactory baseBookFactory, IDatabase database)
         {
             _baseBookFactory = baseBookFactory;
             _database = database;

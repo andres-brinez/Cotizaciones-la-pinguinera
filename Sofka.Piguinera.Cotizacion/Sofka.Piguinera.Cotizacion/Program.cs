@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<Database>(options => options.UseSqlServer(builder.Configuration["SQLConnectionString"]));
 builder.Services.AddScoped<IDatabase, Database>();
 
-builder.Services.AddScoped<IQuotesService, QuotesServiceImplementation>();
+builder.Services.AddScoped<IBooksBudgetService, BooksBudgetService>();
 builder.Services.AddScoped<ITotalPriceQuotationService, TotalPriceQuotationService>();
 builder.Services.AddScoped<ITotalPriceQuotesService, TotalPriceQuotesService>();
 
