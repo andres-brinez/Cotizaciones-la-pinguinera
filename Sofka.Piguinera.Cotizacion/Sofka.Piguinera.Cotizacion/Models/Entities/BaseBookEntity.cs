@@ -21,12 +21,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         private readonly List<IDiscountStrategy> _discountStrategies = new List<IDiscountStrategy>();
 
 
-        public BaseBookEntity()
-        {
-            
-        }
-
-        protected BaseBookEntity(string id,string title, int originalPrice, string nameProvider, int seniority, int cuantity,BaseBookType type)
+        public BaseBookEntity(string id,string title, int originalPrice, string nameProvider, int seniority, int cuantity,BaseBookType type)
         {
             Id = id;
             Title = title;
@@ -65,6 +60,27 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         public override string ToString()
         {
             return $" - Title: {Title}, Type: {Type} Price: {CurrentPrice}, Discount: {Discount*100}% \n";
+        }
+
+
+        public override bool Equals(object? obj)
+        {
+            return obj is BaseBookEntity entity &&
+                   Id == entity.Id &&
+                   Title == entity.Title &&
+                   OriginalPrice == entity.OriginalPrice &&
+                   CurrentPrice == entity.CurrentPrice &&
+                   NameProvider == entity.NameProvider &&
+                   Seniority == entity.Seniority &&
+                   Discount == entity.Discount &&
+                   Cuantity == entity.Cuantity &&
+                   Type == entity.Type;
+
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Title, OriginalPrice, CurrentPrice, NameProvider, Seniority, Cuantity, Type);
         }
 
     }
