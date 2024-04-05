@@ -11,7 +11,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
         public int Seniority { get; set; }
         public string Title { get; set; } = string.Empty;
         public int OriginalPrice { get; set; }
-        public int Cuantity { get; set; }
+        public int Quantity { get; set; }
         public BaseBookType Type { get; set; }
 
 
@@ -27,7 +27,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
             Seniority = seniority;
             Title = title;
             OriginalPrice = originalPrice;
-            Cuantity = cuantity;
+            Quantity = cuantity;
             Type = type;
         }
 
@@ -43,8 +43,8 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
                 RuleFor(x => x.Title).NotNull().NotEmpty().WithMessage("El titulo del libro es requerido");
                 RuleFor(x => x.OriginalPrice).NotEmpty().WithMessage("El precio original del libro es requerido");
                 RuleFor(x => x.OriginalPrice).GreaterThan(0).WithMessage("El precio original del libro debe ser mayor a 0");
-                RuleFor(x => x.Cuantity).NotEmpty().WithMessage("La cantidad de libros es requerida");
-                RuleFor(x => x.Cuantity).GreaterThan(0).WithMessage("La cantidad de libros debe ser mayor a 0");
+                RuleFor(x => x.Quantity).NotEmpty().WithMessage("La cantidad de libros es requerida");
+                RuleFor(x => x.Quantity).GreaterThan(0).WithMessage("La cantidad de libros debe ser mayor a 0");
                 RuleFor(x => x.Type).NotNull().WithMessage("El tipo de libro es requerido");
                 RuleFor(x => x.Type).IsInEnum().WithMessage("El tipo de libro no es valido");
             }
