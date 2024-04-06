@@ -9,8 +9,6 @@ using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
 using Sofka.Piguinera.Cotizacion.Services;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
-using System;
-using System.Collections.Generic;
 
 namespace Sofka.Piguinera.Cotizacion.Test.Services
 {
@@ -30,7 +28,6 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
             _databaseMock = new Mock<IDatabase>();
             _databaseMock.SetupGet(database => database.Books).Returns(_dbSetMock.Object);
             service = new TotalPriceQuotationService(_factoryMock.Object, _databaseMock.Object);
-
 
         }
 
