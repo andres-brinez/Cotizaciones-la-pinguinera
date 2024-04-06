@@ -1,42 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
-using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
-using Sofka.Piguinera.Cotizacion.Models.Entities;
-using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
 using Sofka.Piguinera.Cotizacion.Services;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sofka.Pinguinera.Cotizacion.Test.Services
 {
     public class BooksBudgetServiceTest
     {
-
-        private readonly Mock<IBaseBookFactory> _factoryMock;
-        private readonly Mock<DbSet<BookPersistence>> _dbSetMock;
         private readonly Mock<IDatabase> _databaseMock;
         private readonly IBooksBudgetService service;
 
         public BooksBudgetServiceTest()
         {
-            _dbSetMock = new Mock<DbSet<BookPersistence>>();
+            var data = new List<BookPersistence>().AsQueryable();
+            var mockSet = new Mock<DbSet<BookPersistence>>();
+            
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.Provider).Returns(data.Provider);
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.Expression).Returns(data.Expression);
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
             _databaseMock = new Mock<IDatabase>();
-            _databaseMock.SetupGet(database => database.Books).Returns(_dbSetMock.Object);
+            _databaseMock.Setup(database => database.Books).Returns(mockSet.Object);
+
             service = new BooksBudgetService(_databaseMock.Object);
         }
 
 
         [Fact]
-        public async void Create_ShouldReturnCorrectType_WhenCalledWithValidInput()
+        public async void ShouldReturnCorrectType_WhenCalledWithValidInput()
         {
             BookWithBudgeInputDTO books = new BookWithBudgeInputDTO
             {
@@ -44,27 +41,20 @@ namespace Sofka.Pinguinera.Cotizacion.Test.Services
                 Budget = 1000
             };
 
-
-    
-
+            // Setup mock to return a book when FindAsync is called
             _databaseMock
-              .Setup(database => database.SaveAsync())
-              .Returns(Task.FromResult(true));
+                .Setup(database => database.Books.FindAsync(It.IsAny<string>()))
+                .Returns(ValueTask.FromResult(new BookPersistence()));
 
             var result = service.BooksBudget(books);
 
             Assert.NotNull(result);
-            Assert.IsType<BaseBookOutputDTO>(result);
-            // comparar que el Budget sea nayor a 0
+            Assert.IsType<BookWithBudgeOutputDTO>(result);
 
-
-            _databaseMock.Verify(database => database.Books.AddAsync(It.IsAny<BookPersistence>(), default), Times.Once);
-            _databaseMock.Verify(database => database.SaveAsync(), Times.Once);
-            _factoryMock.Verify(factory => factory.Create(It.IsAny<BaseBookInputDTO>()), Times.Once);
         }
 
         [Fact]
-        public async Task CalculateTotalPriceQuotes_ShouldReturnNull_WhenDatabaseSaveFails()
+        public async Task CalculateTotalPriceQuotes_ShouldReturnEmptyList_WhenBooksNotFound()
         {
             var informationBooks = new BookWithBudgeInputDTO
             {
@@ -72,22 +62,31 @@ namespace Sofka.Pinguinera.Cotizacion.Test.Services
                 Budget = 1000
             };
 
-            _databaseMock
-                .Setup(database => database.SaveAsync())
-                .ReturnsAsync(false); // Simulate a failure when trying to save changes
+            // Simulate that the books are not found in the database
+            var mockSet = new Mock<DbSet<BookPersistence>>();
+
+            // Se configura para que se retorne una lista vacía
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.Provider).Returns(new List<BookPersistence>().AsQueryable().Provider);
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.Expression).Returns(new List<BookPersistence>().AsQueryable().Expression);
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.ElementType).Returns(new List<BookPersistence>().AsQueryable().ElementType);
+            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.GetEnumerator()).Returns(new List<BookPersistence>().AsQueryable().GetEnumerator());
+
+            _databaseMock.Setup(database => database.Books).Returns(mockSet.Object);
 
             var result = service.BooksBudget(informationBooks);
 
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.Empty(result.Books);
         }
+
 
         [Fact]
         public async Task CalculateTotalPriceQuotes_ShouldHandleEmptyList()
         {
             var informationBooks = new BookWithBudgeInputDTO
             {
-                IdBooks = new List<string> {},
-                Budget = 
+                IdBooks = new List<string> { },
+                Budget = 0
             };
 
             var result = service.BooksBudget(informationBooks);
@@ -95,8 +94,6 @@ namespace Sofka.Pinguinera.Cotizacion.Test.Services
             Assert.Empty(result.Books);
 
         }
-
-
 
     }
 }
