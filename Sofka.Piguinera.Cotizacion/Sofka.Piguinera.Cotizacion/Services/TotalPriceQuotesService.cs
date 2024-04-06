@@ -29,8 +29,17 @@ namespace Sofka.Piguinera.Cotizacion.Services
             {
                 BookPersistence bookPersistence = new BookPersistence();
 
-                bookPersistence = _database.Books.FirstOrDefault(b => b.Id == informationBook.Id); // obtiene el libro de la base de datos
 
+                try
+                {
+                    bookPersistence = _database.Books.FirstOrDefault(b => b.Id == informationBook.Id); // obtiene el libro de la base de datos
+                }
+
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return null;
+                }
 
                 if (bookPersistence != null)
                 {
