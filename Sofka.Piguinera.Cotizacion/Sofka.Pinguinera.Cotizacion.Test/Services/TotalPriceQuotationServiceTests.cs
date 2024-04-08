@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
+using Sofka.Piguinera.Cotizacion.DesignPattern.Factories;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
-using Sofka.Piguinera.Cotizacion.Models.Factories;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
 using Sofka.Piguinera.Cotizacion.Services;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
@@ -40,7 +40,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
 
 
             _factoryMock
-              .Setup(factory => factory.Create(It.IsAny<BaseBookInputDTO>()))
+              .Setup(factory => factory.CreateBookEntity(It.IsAny<BaseBookInputDTO>()))
               .Returns(employeeEntity);
 
             _databaseMock
@@ -56,7 +56,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
 
             _databaseMock.Verify(database => database.Books.AddAsync(It.IsAny<BookPersistence>(), default), Times.Once);
             _databaseMock.Verify(database => database.SaveAsync(), Times.Once);
-            _factoryMock.Verify(factory => factory.Create(It.IsAny<BaseBookInputDTO>()), Times.Once);
+            _factoryMock.Verify(factory => factory.CreateBookEntity(It.IsAny<BaseBookInputDTO>()), Times.Once);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Sofka.Piguinera.Cotizacion.Test.Services
             var bookDTO = new BaseBookInputDTO("6", "nombre de libro", 600, "Gustavo", 600, 6, 0);
 
             _factoryMock
-                .Setup(factory => factory.Create(It.IsAny<BaseBookInputDTO>()))
+                .Setup(factory => factory.CreateBookEntity(It.IsAny<BaseBookInputDTO>()))
                 .Returns(bookEntity);
 
             _databaseMock
