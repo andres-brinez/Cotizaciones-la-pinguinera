@@ -9,5 +9,6 @@ namespace Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces
         DbSet<BookPersistence> Books { get; set; }
         Task<bool> SaveAsync();
 
+
     }
 }

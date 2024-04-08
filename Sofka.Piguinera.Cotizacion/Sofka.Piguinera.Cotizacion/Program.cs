@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Sofka.Piguinera.Cotizacion.Database;
 using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
+using Sofka.Piguinera.Cotizacion.DesignPattern.Factories;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
-using Sofka.Piguinera.Cotizacion.Models.Factories;
-using Sofka.Piguinera.Cotizacion.Services;
+using Sofka.Piguinera.Cotizacion.Services.Implementations;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -22,6 +22,7 @@ builder.Services.AddScoped<IDatabase, Database>();
 builder.Services.AddScoped<IBooksBudgetService, BooksBudgetService>();
 builder.Services.AddScoped<ITotalPriceQuotationService, TotalPriceQuotationService>();
 builder.Services.AddScoped<ITotalPriceQuotesService, TotalPriceQuotesService>();
+builder.Services.AddScoped<IDataBaseService, DataBaseService>();
 
 builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();

@@ -56,14 +56,26 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var result = await _totalPriceQuotationService.CalculateTotalPriceQuotation(payload);
-            // validacion
-            if (result == null)
+
+            try
             {
-                return BadRequest("Error al guardar en la base de datos");
+                var result = await _totalPriceQuotationService.CalculateTotalPriceQuotation(payload);
+
+                // validacion
+                if (result == null)
+                {
+                    return BadRequest("Error al guardar en la base de datos");
+                }
+
+                return Ok(result);
             }
 
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+           
         }
 
 
