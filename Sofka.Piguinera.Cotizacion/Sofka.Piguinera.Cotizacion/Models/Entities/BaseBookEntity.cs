@@ -62,24 +62,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         }
 
 
-        public override bool Equals(object? obj)
+        public object Clone()
         {
-            return obj is BaseBookEntity entity &&
-                   Id == entity.Id &&
-                   Title == entity.Title &&
-                   OriginalPrice == entity.OriginalPrice &&
-                   CurrentPrice == entity.CurrentPrice &&
-                   NameProvider == entity.NameProvider &&
-                   Seniority == entity.Seniority &&
-                   Discount == entity.Discount &&
-                   Cuantity == entity.Cuantity &&
-                   Type == entity.Type;
-
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Title, OriginalPrice, CurrentPrice, NameProvider, Seniority, Cuantity, Type);
+            return this.MemberwiseClone();
         }
 
     }
