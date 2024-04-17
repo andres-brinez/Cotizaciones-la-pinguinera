@@ -20,9 +20,9 @@ namespace Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO
 
         }
 
-        public BaseBookInputDTO(string Id,string nameProvider, int seniority, string title, int originalPrice, int cuantity, BaseBookType type)
+        public BaseBookInputDTO(string id,string nameProvider, int seniority, string title, int originalPrice, int cuantity, BaseBookType type)
         {
-            Id = Id;
+            Id = id;
             NameProvider = nameProvider;
             Seniority = seniority;
             Title = title;
