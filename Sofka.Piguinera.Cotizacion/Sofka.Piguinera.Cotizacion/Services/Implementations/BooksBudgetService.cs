@@ -5,6 +5,7 @@ using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
+using System.Collections.Generic;
 using static System.Reflection.Metadata.BlobBuilder;
 namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 {
@@ -23,6 +24,8 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
         public BookWithBudgeOutputDTO BooksBudget(BookWithBudgeInputDTO payload)
         {
             var books = new List<BaseBookEntity>();
+            double totalBudgetAvailable = (double)payload.Budget;
+
 
             foreach (var idBook in payload.IdBooks)
             {
@@ -37,16 +40,9 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
             }
 
-            List<BaseBookEntity> booksResult = BookPricingService.CalculatePurcheseValue(books);
-
-            List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
 
             books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.OriginalPrice).ToList();
-
-            double totalBudgetAvailable = (double)payload.Budget;
-
             List<BaseBookOutputDTO> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
-
             BookWithBudgeOutputDTO bookWithBudgeOutputDTO = new BookWithBudgeOutputDTO(booksAvailable, (float)totalBudgetAvailable);
 
             return bookWithBudgeOutputDTO;
@@ -56,12 +52,12 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
         private List<BaseBookOutputDTO> SelectBooksWithinBudget(List<BaseBookEntity> books, ref double totalBudgetAvailable)
         {
 
-            List<BaseBookOutputDTO> booksAvailable = new List<BaseBookOutputDTO>();
+            List<BaseBookOutputDTO> booksOutputDTO = new List<BaseBookOutputDTO>();
+            List<BaseBookEntity> booksAvailable = new List<BaseBookEntity>();
+            List<BaseBookEntity> booksPurchese = new List<BaseBookEntity>();
 
             bool hasBook = false;
             bool hasNovel = false;
-
-            List<BaseBookEntity> booksResult = new List<BaseBookEntity>();
 
             foreach (var originalBook in books)
             {
@@ -84,39 +80,24 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
                     else
                     {
                         break;
-
                     }
+
                 }
 
                 if (bookEntity.Cuantity > 0)
                 {
-                    booksResult.Add(bookEntity);
+                    booksAvailable.Add(bookEntity);
                 }
-
+                
             }
 
-              List<BaseBookEntity> booksResult2 = BookPricingService.CalculatePurcheseValue(booksResult);
-            booksAvailable = booksResult.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
-            return booksAvailable;
+            booksPurchese = BookPricingService.CalculatePurcheseValue(booksAvailable);
+            booksOutputDTO = booksPurchese.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
+            return booksOutputDTO;
         }
 
 
-        private void UpdateBookQuantity(List<BaseBookOutputDTO> booksAvailable, BaseBookEntity book)
-        {
-            var existingBook = booksAvailable.FirstOrDefault(b => b.Title == book.Title && b.Type == book.Type);
-
-            if (existingBook != null)
-            {
-                existingBook.Cuantity++;
-            }
-            else
-            {
-
-                BaseBookOutputDTO bookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, 1);
-                booksAvailable.Add(bookOutputDTO);
-            }
-        }
-
+      
         private void ValidateTypeBook(BaseBookEntity book, ref bool hasBook, ref bool hasNovel)
         {
             if (book.Type == BaseBookType.Novel)
