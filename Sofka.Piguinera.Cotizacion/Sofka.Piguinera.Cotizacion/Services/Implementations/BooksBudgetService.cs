@@ -5,6 +5,7 @@ using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
+using static System.Reflection.Metadata.BlobBuilder;
 namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 {
     public class BooksBudgetService : IBooksBudgetService
@@ -36,11 +37,11 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
             }
 
-            BookPricingService.CalculatePurcheseValue(books);
+            List<BaseBookEntity> booksResult = BookPricingService.CalculatePurcheseValue(books);
 
-            List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
+            List<BaseBookOutputDTO> booksOutput = books.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
 
-            books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.CurrentPrice).ToList();
+            books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.OriginalPrice).ToList();
 
             double totalBudgetAvailable = (double)payload.Budget;
 
@@ -56,24 +57,29 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
         {
 
             List<BaseBookOutputDTO> booksAvailable = new List<BaseBookOutputDTO>();
+
             bool hasBook = false;
             bool hasNovel = false;
 
-            foreach (var book in books)
-            {
+            List<BaseBookEntity> booksResult = new List<BaseBookEntity>();
 
-                while (totalBudgetAvailable > book.CurrentPrice)
+            foreach (var originalBook in books)
+            {
+                BaseBookEntity bookEntity = (BaseBookEntity)originalBook.Clone();
+                bookEntity.Cuantity = 0;
+
+                while (totalBudgetAvailable > originalBook.OriginalPrice)
                 {
 
-                    bool shouldAddBook = book.Type == BaseBookType.Novel && !hasNovel ||
-                                         book.Type == BaseBookType.Book && !hasBook ||
+                    bool shouldAddBook = originalBook.Type == BaseBookType.Novel && !hasNovel ||
+                                         originalBook.Type == BaseBookType.Book && !hasBook ||
                                          hasBook && hasNovel;
 
                     if (shouldAddBook)
                     {
-                        UpdateBookQuantity(booksAvailable, book);
-                        totalBudgetAvailable -= book.CurrentPrice;
-                        ValidateTypeBook(book, ref hasBook, ref hasNovel);
+                        bookEntity.Cuantity++;
+                        totalBudgetAvailable -= originalBook.OriginalPrice;
+                        ValidateTypeBook(originalBook, ref hasBook, ref hasNovel);
                     }
                     else
                     {
@@ -81,8 +87,16 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
                     }
                 }
+
+                if (bookEntity.Cuantity > 0)
+                {
+                    booksResult.Add(bookEntity);
+                }
+
             }
 
+              List<BaseBookEntity> booksResult2 = BookPricingService.CalculatePurcheseValue(booksResult);
+            booksAvailable = booksResult.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
             return booksAvailable;
         }
 
@@ -97,6 +111,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
             }
             else
             {
+
                 BaseBookOutputDTO bookOutputDTO = new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, 1);
                 booksAvailable.Add(bookOutputDTO);
             }
