@@ -22,8 +22,8 @@ namespace Sofka.Piguinera.Cotizacion.Database
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return default;
+                throw;
+
             }
         }
 

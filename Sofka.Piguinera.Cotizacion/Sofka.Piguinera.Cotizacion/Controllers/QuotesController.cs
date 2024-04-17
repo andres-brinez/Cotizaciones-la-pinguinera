@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
@@ -70,13 +72,26 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return Ok(result);
             }
 
-            catch (Exception ex)
+            catch (DbUpdateException ex)
             {
-                return BadRequest(ex.Message);
-            }
+                var sqlException = ex.GetBaseException() as SqlException;
+                if (sqlException != null && (sqlException.Number == 2627 || sqlException.Number == 2601))
+                {
+                    return Conflict(new { error = "A book with the same ID already exists." });
 
-           
+                }
+                else
+                {
+                    return BadRequest(new { error = "Failed to add book." });
+
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { error = "An error occurred while adding the book." });
+            }
         }
+        
 
 
         [HttpPost("CalculateBooksPay")]
