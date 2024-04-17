@@ -8,6 +8,7 @@ using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
+using Sofka.Piguinera.Cotizacion.Utils;
 
 namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 {
@@ -39,8 +40,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
             }
 
-   
-            List<BaseBookEntity> booksResult=BookPricingService.CalculatePurcheseValue(books);
+            List<BaseBookEntity> booksResult=BookCalculatePricing.CalculatePurcheseValue(books);
 
             List<BaseBookOutputDTO> booksOutput = booksResult.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
 
