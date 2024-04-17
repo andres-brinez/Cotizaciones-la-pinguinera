@@ -19,12 +19,12 @@ namespace Sofka.Piguinera.Cotizacion.Services
         {
             quantity = quantity == -1 ? (int)bookPersistence.Quantity : quantity;
 
-            BaseBookEntity bookEntity = _baseBookFactory.CreateBookEntity((BaseBookType)bookPersistence.Type, bookPersistence.Id, bookPersistence.Title, (int)bookPersistence.OriginalPrice, bookPersistence.NameProvider, (int)bookPersistence.Seniority, quantity);
+            BaseBookEntity bookEntity = _baseBookFactory.CreateBookEntity((BaseBookType)bookPersistence.Type, bookPersistence.Id, bookPersistence.Title, (int)bookPersistence.UnitPrice, bookPersistence.NameProvider, (int)bookPersistence.Seniority, quantity);
 
+            bookEntity.OriginalPrice = (int)bookPersistence.UnitPrice;
             bookEntity.CurrentPrice = (float)((float)bookPersistence.UnitPrice * quantity );
             bookEntity.Discount = (float)bookPersistence.Discount;
 
-            bookEntity.CalculateTotalPrice();
 
             return bookEntity;
         }
