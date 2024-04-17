@@ -12,5 +12,9 @@
         public double UnitPrice { get; set; }
         public double Discount { get; set; } // Cambiado de float a double
 
+        public string ToString()
+        {
+            return "Id: " + Id + " Title: " + Title + " NameProvider: " + NameProvider + " Seniority: " + Seniority + " OriginalPrice: " + OriginalPrice + " Quantity: " + Quantity + " Type: " + Type + " UnitPrice: " + UnitPrice + " Discount: " + Discount;
+        }
     }
 }
