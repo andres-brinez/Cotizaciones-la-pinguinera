@@ -5,6 +5,7 @@ using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
+using Sofka.Piguinera.Cotizacion.Utils;
 using System.Collections.Generic;
 using static System.Reflection.Metadata.BlobBuilder;
 namespace Sofka.Piguinera.Cotizacion.Services.Implementations
@@ -33,8 +34,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
                 if (bookPersistence != null)
                 {
-                    CreateAndCalculateBook createAndCalculateBook = new CreateAndCalculateBook(_baseBookFactory);
-                    BaseBookEntity bookEntity = createAndCalculateBook.BookPersistenceToEntity(bookPersistence,-1);
+                    BaseBookEntity bookEntity = _baseBookFactory.BookPersistenceToEntity(bookPersistence,-1);
                     books.Add(bookEntity);
                 }
 
@@ -91,7 +91,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
                 
             }
 
-            booksPurchese = BookPricingService.CalculatePurcheseValue(booksAvailable);
+            booksPurchese = BookCalculatePricing.CalculatePurcheseValue(booksAvailable);
             booksOutputDTO = booksPurchese.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
             return booksOutputDTO;
         }
