@@ -30,7 +30,7 @@ namespace Sofka.Piguinera.Cotizacion.DesignPattern.Factories
 
         }
 
-        public BookPersistence CreateBookPersistence(BaseBookEntity bookEntity)
+        public BookPersistence BookEntityToPersistence(BaseBookEntity bookEntity)
         {
             return new BookPersistence
             {
@@ -44,6 +44,19 @@ namespace Sofka.Piguinera.Cotizacion.DesignPattern.Factories
                 UnitPrice = bookEntity.CurrentPrice,
                 Discount = bookEntity.Discount
             };
+        }
+
+        public BaseBookEntity BookPersistenceToEntity(BookPersistence bookPersistence, int quantity)
+        {
+            quantity = quantity == -1 ? (int)bookPersistence.Quantity : quantity;
+
+            BaseBookEntity bookEntity = CreateBookEntity((BaseBookType)bookPersistence.Type, bookPersistence.Id, bookPersistence.Title, (int)bookPersistence.UnitPrice, bookPersistence.NameProvider, (int)bookPersistence.Seniority, quantity);
+
+            bookEntity.OriginalPrice = (int)bookPersistence.UnitPrice;
+            bookEntity.CurrentPrice = (float)((float)bookPersistence.UnitPrice * quantity);
+            bookEntity.Discount = (float)bookPersistence.Discount;
+
+            return bookEntity;
         }
 
     }

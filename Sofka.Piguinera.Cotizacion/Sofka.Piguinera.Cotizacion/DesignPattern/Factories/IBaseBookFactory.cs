@@ -10,7 +10,8 @@ namespace Sofka.Piguinera.Cotizacion.DesignPattern.Factories
     {
 
         BaseBookEntity CreateBookEntity(BaseBookType type, string id, string title, int originalPrice, string nameProvider, int seniority, int quantity);
-        BookPersistence CreateBookPersistence(BaseBookEntity bookEntity);
+        BookPersistence BookEntityToPersistence(BaseBookEntity bookEntity);
+        BaseBookEntity BookPersistenceToEntity(BookPersistence bookPersistence, int quantity);
 
     }
 }

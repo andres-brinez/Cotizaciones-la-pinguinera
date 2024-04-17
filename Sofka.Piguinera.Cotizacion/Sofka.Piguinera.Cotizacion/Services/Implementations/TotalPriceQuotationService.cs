@@ -29,7 +29,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
             bookEntity.CalculateTotalPrice();
 
             BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(bookEntity.Title, bookEntity.Type, bookEntity.CurrentPrice, bookEntity.Discount, bookEntity.Cuantity);
-            var bookPersistence = _baseBookFactory.CreateBookPersistence(bookEntity);
+            var bookPersistence = _baseBookFactory.BookEntityToPersistence(bookEntity);
 
             if (!await _databaseService.AddBookAsync(bookPersistence))
             {

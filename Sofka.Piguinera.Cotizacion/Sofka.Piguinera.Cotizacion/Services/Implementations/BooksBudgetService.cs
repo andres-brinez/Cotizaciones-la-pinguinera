@@ -34,7 +34,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
                 if (bookPersistence != null)
                 {
                     CreateAndCalculateBook createAndCalculateBook = new CreateAndCalculateBook(_baseBookFactory);
-                    BaseBookEntity bookEntity = createAndCalculateBook.Entity(bookPersistence,-1);
+                    BaseBookEntity bookEntity = createAndCalculateBook.BookPersistenceToEntity(bookPersistence,-1);
                     books.Add(bookEntity);
                 }
 

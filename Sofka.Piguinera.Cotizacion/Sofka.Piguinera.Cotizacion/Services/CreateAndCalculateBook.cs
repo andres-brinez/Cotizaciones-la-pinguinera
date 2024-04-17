@@ -15,7 +15,7 @@ namespace Sofka.Piguinera.Cotizacion.Services
             _baseBookFactory = baseBookFactory;
         }
 
-        public BaseBookEntity Entity(BookPersistence bookPersistence, int quantity)
+        public BaseBookEntity BookPersistenceToEntity(BookPersistence bookPersistence, int quantity)
         {
             quantity = quantity == -1 ? (int)bookPersistence.Quantity : quantity;
 
@@ -24,7 +24,6 @@ namespace Sofka.Piguinera.Cotizacion.Services
             bookEntity.OriginalPrice = (int)bookPersistence.UnitPrice;
             bookEntity.CurrentPrice = (float)((float)bookPersistence.UnitPrice * quantity );
             bookEntity.Discount = (float)bookPersistence.Discount;
-
 
             return bookEntity;
         }
