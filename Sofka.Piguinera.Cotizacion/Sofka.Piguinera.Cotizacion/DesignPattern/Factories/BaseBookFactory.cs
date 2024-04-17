@@ -36,7 +36,7 @@ namespace Sofka.Piguinera.Cotizacion.DesignPattern.Factories
             {
                 Id = bookEntity.Id,
                 Title = bookEntity.Title,
-                OriginalPrice = bookEntity.OriginalPrice,
+                OriginalPrice = bookEntity.UnitPrice,
                 NameProvider = bookEntity.NameProvider,
                 Seniority = bookEntity.Seniority,
                 Quantity = bookEntity.Cuantity,
@@ -52,7 +52,7 @@ namespace Sofka.Piguinera.Cotizacion.DesignPattern.Factories
 
             BaseBookEntity bookEntity = CreateBookEntity((BaseBookType)bookPersistence.Type, bookPersistence.Id, bookPersistence.Title, (int)bookPersistence.UnitPrice, bookPersistence.NameProvider, (int)bookPersistence.Seniority, quantity);
 
-            bookEntity.OriginalPrice = (int)bookPersistence.UnitPrice;
+            bookEntity.UnitPrice = (int)bookPersistence.UnitPrice;
             bookEntity.CurrentPrice = (float)((float)bookPersistence.UnitPrice * quantity);
             bookEntity.Discount = (float)bookPersistence.Discount;
 

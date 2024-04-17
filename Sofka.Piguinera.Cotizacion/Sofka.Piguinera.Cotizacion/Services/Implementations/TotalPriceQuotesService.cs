@@ -42,7 +42,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
             List<BaseBookEntity> booksResult=BookCalculatePricing.CalculatePurcheseValue(books);
 
-            List<BaseBookOutputDTO> booksOutput = booksResult.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.CurrentPrice, book.Discount, book.Cuantity)).ToList();
+            List<BaseBookOutputDTO> booksOutput = booksResult.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.UnitPrice, book.Discount, book.Cuantity)).ToList();
 
             BooksPurcheseOutputDTO booksPurcheseOutputDTO = new BooksPurcheseOutputDTO(booksOutput);
 

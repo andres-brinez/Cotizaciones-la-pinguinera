@@ -15,7 +15,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             CalculateDiscountSeniority();
            
-            CurrentPrice = (float)(OriginalPrice * CURRENT_INCREASE * (1 - Discount));
+            CurrentPrice = (float)(UnitPrice * CURRENT_INCREASE * (1 - Discount));
 
         }
 

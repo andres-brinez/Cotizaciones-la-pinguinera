@@ -19,7 +19,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
             CalculateDiscountSeniority();
             
-            var totalPrice = (OriginalPrice + (OriginalPrice* CURRENT_INCREASE));
+            var totalPrice = (UnitPrice + (UnitPrice* CURRENT_INCREASE));
             CurrentPrice = (totalPrice * (1 - Discount));
 
         

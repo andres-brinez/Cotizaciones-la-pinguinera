@@ -46,15 +46,15 @@ namespace Sofka.Piguinera.Cotizacion.Utils
         public static void ApplyRetailIncrease(BaseBookEntity book)
         {
             const float RETAIL_INCREASE = 1.02f;
-            book.OriginalPrice = Convert.ToInt32(RETAIL_INCREASE* book.OriginalPrice);
+            book.UnitPrice = Convert.ToInt32(RETAIL_INCREASE* book.UnitPrice);
         }
 
         private static void ApplyBulkDecrease(BaseBookEntity book)
         {
             const float BULK_DECREASE_PER_UNIT = 0.15f;
 
-            float amountDiscount = book.OriginalPrice * BULK_DECREASE_PER_UNIT;
-            book.OriginalPrice -= Convert.ToInt32(amountDiscount);
+            float amountDiscount = book.UnitPrice * BULK_DECREASE_PER_UNIT;
+            book.UnitPrice -= Convert.ToInt32(amountDiscount);
 
             book.Discount += (float)BULK_DECREASE_PER_UNIT;
 

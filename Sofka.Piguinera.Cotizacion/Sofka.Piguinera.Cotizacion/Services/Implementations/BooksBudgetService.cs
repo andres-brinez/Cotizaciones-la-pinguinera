@@ -41,7 +41,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
             }
 
 
-            books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.OriginalPrice).ToList();
+            books = books.OrderByDescending(item => item.Discount).ThenBy(item => item.UnitPrice).ToList();
             List<BaseBookOutputDTO> booksAvailable = SelectBooksWithinBudget(books, ref totalBudgetAvailable);
             BookWithBudgeOutputDTO bookWithBudgeOutputDTO = new BookWithBudgeOutputDTO(booksAvailable, (float)totalBudgetAvailable);
 
@@ -64,7 +64,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
                 BaseBookEntity bookEntity = (BaseBookEntity)originalBook.Clone();
                 bookEntity.Cuantity = 0;
 
-                while (totalBudgetAvailable > originalBook.OriginalPrice)
+                while (totalBudgetAvailable > originalBook.UnitPrice)
                 {
 
                     bool shouldAddBook = originalBook.Type == BaseBookType.Novel && !hasNovel ||
@@ -74,7 +74,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
                     if (shouldAddBook)
                     {
                         bookEntity.Cuantity++;
-                        totalBudgetAvailable -= originalBook.OriginalPrice;
+                        totalBudgetAvailable -= originalBook.UnitPrice;
                         ValidateTypeBook(originalBook, ref hasBook, ref hasNovel);
                     }
                     else
@@ -92,7 +92,7 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
             }
 
             booksPurchese = BookCalculatePricing.CalculatePurcheseValue(booksAvailable);
-            booksOutputDTO = booksPurchese.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.OriginalPrice, book.Discount, book.Cuantity)).ToList();
+            booksOutputDTO = booksPurchese.Select(book => new BaseBookOutputDTO(book.Title, book.Type, book.UnitPrice, book.Discount, book.Cuantity)).ToList();
             return booksOutputDTO;
         }
 

@@ -8,7 +8,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public string Id { get; set; } = string.Empty;
         public string Title { get; set; }
-        public int OriginalPrice { get; set; }
+        public int UnitPrice { get; set; }
         public float CurrentPrice { get; set; }
         public string NameProvider { get; set; } = string.Empty;
         public int Seniority { get; set; }
@@ -24,7 +24,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         {
             Id = id;
             Title = title;
-            OriginalPrice = originalPrice;
+            UnitPrice = originalPrice;
             NameProvider = nameProvider;
             Seniority = seniority;
             Cuantity = cuantity;
@@ -58,7 +58,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public override string ToString()
         {
-            return $"Id: {Id}, Title: {Title}, OriginalPrice: {OriginalPrice}, CurrentPrice: {CurrentPrice}, NameProvider: {NameProvider}, Seniority: {Seniority}, Discount: {Discount}, Cuantity: {Cuantity}, Type: {Type}";
+            return $"Id: {Id}, Title: {Title}, OriginalPrice: {UnitPrice}, CurrentPrice: {CurrentPrice}, NameProvider: {NameProvider}, Seniority: {Seniority}, Discount: {Discount}, Cuantity: {Cuantity}, Type: {Type}";
         }
 
 
