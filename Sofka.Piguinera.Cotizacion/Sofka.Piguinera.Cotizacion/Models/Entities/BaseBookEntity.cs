@@ -58,7 +58,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public override string ToString()
         {
-            return $" - Title: {Title}, Type: {Type} Price: {CurrentPrice}, Discount: {Discount * 100}% \n";
+            return $"Id: {Id}, Title: {Title}, OriginalPrice: {OriginalPrice}, CurrentPrice: {CurrentPrice}, NameProvider: {NameProvider}, Seniority: {Seniority}, Discount: {Discount}, Cuantity: {Cuantity}, Type: {Type}";
         }
 
 
