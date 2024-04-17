@@ -27,7 +27,6 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
             // Se calcula el precio  del libro con los descuentos aplicados 
             bookEntity.CalculateTotalPrice();
-            BookPricingService.ApplyRetailIncrease(bookEntity);
 
             BaseBookOutputDTO baseBookOutputDTO = new BaseBookOutputDTO(bookEntity.Title, bookEntity.Type, bookEntity.CurrentPrice, bookEntity.Discount, bookEntity.Cuantity);
             var bookPersistence = _baseBookFactory.CreateBookPersistence(bookEntity);
