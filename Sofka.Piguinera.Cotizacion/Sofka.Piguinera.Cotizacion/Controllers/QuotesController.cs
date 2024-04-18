@@ -120,7 +120,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
             return Ok(result);
         }
 
-
         [HttpPost("CalculateBooksBudget")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(BookWithBudgeOutputDTO), StatusCodes.Status200OK)]
