@@ -10,7 +10,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         public string Title { get; set; }
         public int UnitPrice { get; set; }
         public float CurrentPrice { get; set; }
-        public string NameProvider { get; set; } = string.Empty;
+        public string EmailProvider { get; set; } = string.Empty;
         public int Seniority { get; set; }
         public float Discount { get; set; } = 0;
         public int Cuantity { get; set; }
@@ -20,12 +20,12 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
         private readonly List<IDiscountStrategy> _discountStrategies = new List<IDiscountStrategy>();
 
 
-        public BaseBookEntity(string id, string title, int originalPrice, string nameProvider, int seniority, int cuantity, BaseBookType type)
+        public BaseBookEntity(string id, string title, int originalPrice, string emailProvider, int seniority, int cuantity, BaseBookType type)
         {
             Id = id;
             Title = title;
             UnitPrice = originalPrice;
-            NameProvider = nameProvider;
+            EmailProvider = emailProvider;
             Seniority = seniority;
             Cuantity = cuantity;
             Type = type;
@@ -58,7 +58,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 
         public override string ToString()
         {
-            return $"Id: {Id}, Title: {Title}, OriginalPrice: {UnitPrice}, CurrentPrice: {CurrentPrice}, EmailProvider: {NameProvider}, Seniority: {Seniority}, Discount: {Discount}, Cuantity: {Cuantity}, Type: {Type}";
+            return $"Id: {Id}, Title: {Title}, OriginalPrice: {UnitPrice}, CurrentPrice: {CurrentPrice}, EmailProvider: {EmailProvider}, Seniority: {Seniority}, Discount: {Discount}, Cuantity: {Cuantity}, Type: {Type}";
         }
 
 

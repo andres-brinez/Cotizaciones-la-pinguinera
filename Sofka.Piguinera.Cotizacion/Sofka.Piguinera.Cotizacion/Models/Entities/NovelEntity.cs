@@ -4,7 +4,7 @@ namespace Sofka.Piguinera.Cotizacion.Models.Entities
 {
     public class NovelEntity : BaseBookEntity
     {
-        public NovelEntity(string id,string title, int originalPrice, string nameProvider, int seniority, int cuantity) : base(id,title, originalPrice, nameProvider, seniority, cuantity, BaseBookType.Novel)
+        public NovelEntity(string id,string title, int originalPrice, string emailProvider, int seniority, int cuantity) : base(id,title, originalPrice, emailProvider, seniority, cuantity, BaseBookType.Novel)
         {
         }
 

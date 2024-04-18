@@ -35,7 +35,7 @@ namespace Sofka.Piguinera.Cotizacion.DesignPattern.Factories
                 Id = bookEntity.Id,
                 Title = bookEntity.Title,
                 OriginalPrice = bookEntity.UnitPrice,
-                EmailProvider = bookEntity.NameProvider,
+                EmailProvider = bookEntity.EmailProvider,
                 Quantity = bookEntity.Cuantity,
                 Type = (byte)(int)bookEntity.Type,
                 UnitPrice = bookEntity.CurrentPrice,
