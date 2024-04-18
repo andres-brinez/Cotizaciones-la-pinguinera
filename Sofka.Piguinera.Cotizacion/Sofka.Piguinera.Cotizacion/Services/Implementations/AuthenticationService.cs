@@ -22,11 +22,22 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
 
         public async Task<bool> RegisterUser(RegisterUserInputDTO user)
         {
-            UserPersistence newUser = new UserPersistence(user.Email, user.Password, user.UserName);
 
-            bool isSave= await _databaseService.AddUserAsync(newUser);
+            if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.UserName))
+            {
+                return false;
+            }
+            else
+            {
+                UserPersistence newUser = new UserPersistence(user.Email, user.Password, user.UserName);
 
-            return isSave;
+                bool isSave = await _databaseService.AddUserAsync(newUser);
+
+                return isSave;
+
+            }
+
+           
         }
 
         public async Task<bool> LoginUser(LoginUserInputDTO InformationUser)
