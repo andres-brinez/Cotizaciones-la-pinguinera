@@ -34,5 +34,18 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
             return Ok("Usuario registrado exitosamente");
         }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginUserInputDTO user)
+        {
+            var result = await _authenticationService.LoginUser(user);
+
+            if (!result)
+            {
+                return BadRequest(new { error = "Correo electrónico o contraseña incorrectos" });
+            }
+
+            return Ok("Inicio de sesión exitoso");
+        }
     }
 }

@@ -8,7 +8,10 @@ namespace Sofka.Piguinera.Cotizacion.Services.Interface
 
         Task<bool> RegisterUser(RegisterUserInputDTO user);
         UserPersistence GetUser(string email);
- 
+        Task<bool> LoginUser(LoginUserInputDTO user);
+
+
+
 
     }
 }
