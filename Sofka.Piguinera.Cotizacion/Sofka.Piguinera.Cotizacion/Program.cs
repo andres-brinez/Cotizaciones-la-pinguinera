@@ -29,6 +29,8 @@ builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();
 builder.Services.AddSingleton<IValidator<BaseBookInputDTO>, BaseBookInputDTO.BaseBookDTOValidator>();
 builder.Services.AddSingleton<IValidator<BookWithBudgeInputDTO>, BookWithBudgeInputDTO.BookWithBudgetDTOValidator>();
 builder.Services.AddSingleton<IValidator<InformationInputDto>, InformationInputDto.InformationInputDtoValidator>();
+builder.Services.AddSingleton<IValidator<RegisterUserInputDTO>, RegisterUserInputDTO.RegisterUserInputDTOValidator>();
+builder.Services.AddSingleton<IValidator<LoginUserInputDTO>, LoginUserInputDTO.LoginUserInputDTOValidator>();
 
 // Add Swagger services
 builder.Services.AddSwaggerGen(c =>
