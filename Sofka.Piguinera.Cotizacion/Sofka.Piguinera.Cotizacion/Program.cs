@@ -23,6 +23,7 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IBooksBudgetService, BooksBudgetService>();
 builder.Services.AddScoped<ITotalPriceQuotationService, TotalPriceQuotationService>();
 builder.Services.AddScoped<ITotalPriceQuotesService, TotalPriceQuotesService>();
+builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IDataBaseService, DataBaseService>();
 
 builder.Services.AddTransient<IBaseBookFactory, BaseBookFactory>();

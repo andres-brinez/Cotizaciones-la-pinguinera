@@ -27,7 +27,6 @@ namespace Sofka.Piguinera.Cotizacion.Database
             }
         }
 
-
         public BookPersistence GetBookById(string id)
         {
             return ExecuteDbOperation(() => _database.Books.FirstOrDefault(b => b.Id == id));
@@ -36,8 +35,8 @@ namespace Sofka.Piguinera.Cotizacion.Database
         public Task<List<BookPersistence>> GetAllBooksAsync()
         {
             return ExecuteDbOperation(() => _database.Books.ToListAsync());
-        }
 
+        }
         public Task<List<BookPersistence>> GetBooksByCategoryAsync(int category)
         {
             return ExecuteDbOperation(() => _database.Books.Where(b => b.Type == category).ToListAsync());

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
+using Sofka.Piguinera.Cotizacion.Models.Persistence;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
@@ -22,12 +23,13 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         private readonly IBooksBudgetService _quotesService;
         private readonly ITotalPriceQuotationService _totalPriceQuotationService;
         private readonly ITotalPriceQuotesService _totalPriceQuotesService;
+        private readonly IBooksService _booksService;
 
         private readonly IValidator<BaseBookInputDTO> _validator;
         private readonly IValidator<BookWithBudgeInputDTO> _validatorBudget;
         private readonly IValidator<InformationInputDto> _validatorInformation;
 
-        public QuotesController(IBooksBudgetService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService, ITotalPriceQuotesService totalPriceQuotesService)
+        public QuotesController(IBooksBudgetService quotesService, IValidator<BaseBookInputDTO> validator, IValidator<BookWithBudgeInputDTO> validatorBudget, IValidator<InformationInputDto> validatorInformation, ITotalPriceQuotationService totalPriceQuotationService, ITotalPriceQuotesService totalPriceQuotesService, IBooksService booksService)
         {
             _quotesService = quotesService;
             _totalPriceQuotesService = totalPriceQuotesService;
@@ -37,6 +39,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
             _validator = validator;
             _validatorBudget = validatorBudget;
             _validatorInformation = validatorInformation;
+            _booksService = booksService;
         }
 
 
@@ -127,7 +130,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         [SwaggerOperation(Summary = "Calculate the total price of a book with a budget", Description = "This method takes a BookWithBudgetDTO object as input, validates it, and then calculates the total price of the book within the given budget.")]
         [SwaggerResponse(StatusCodes.Status200OK, "Returns a string with the books that can be bought with the given budget, or a message indicating that no books can be bought with the current budget.", typeof(BookWithBudgeOutputDTO))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "If the item is null")]
-
         public async Task<ActionResult> CalculateTotalPriceBookBudget([FromBody, SwaggerParameter("The book details with budget.", Required = true)] BookWithBudgeInputDTO payload)
         {
 
@@ -149,5 +151,23 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         }
 
 
+        [HttpGet("GetAllBooks")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(List<BookPersistence>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(Summary = "Get all books", Description = "This method retrieves all books from the database.")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Returns a list of all books in the database.", typeof(List<BookPersistence>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "If the item is null")]
+        public async Task<ActionResult> GetAllBooks()
+        {
+            var result = _booksService.GetAllBooks();
+
+            if (result == null)
+            {
+                return BadRequest(new { error = "Error al obtener los lisbros" });
+            }
+
+            return Ok(result);
+        }
     }
 }
