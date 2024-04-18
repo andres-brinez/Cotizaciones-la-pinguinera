@@ -59,8 +59,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return Ok("Usuario registrado exitosamente");
 
             }
-
-            
         }
 
         [HttpPost("Login")]
@@ -89,9 +87,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
                 return Ok("Inicio de sesión exitoso");
 
-            }
-
-            
+            }   
         }
     }
 }

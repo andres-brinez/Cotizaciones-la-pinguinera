@@ -32,6 +32,8 @@ namespace Sofka.Piguinera.Cotizacion.Services.Implementations
             {
                 var bookPersistence = _databaseService.GetBookById(idBook);
 
+
+
                 if (bookPersistence != null)
                 {
                     BaseBookEntity bookEntity = _baseBookFactory.BookPersistenceToEntity(bookPersistence,-1);
