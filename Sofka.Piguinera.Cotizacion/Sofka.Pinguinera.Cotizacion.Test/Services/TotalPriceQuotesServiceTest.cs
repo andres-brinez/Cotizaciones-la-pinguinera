@@ -62,18 +62,12 @@ namespace Sofka.Pinguinera.Cotizacion.Test.Services
         [Fact]
         public void CalculateTotalPriceQuotes_ShouldHandleEmptyList()
         {
-            // Arrange
             var input = new List<InformationInputDto>();
 
-            // Act
             var result = _service.CalculateTotalPriceQuotes(input);
 
-            // Assert
             Assert.Empty(result.Books);
         }
-
-        
-
 
     }
 }

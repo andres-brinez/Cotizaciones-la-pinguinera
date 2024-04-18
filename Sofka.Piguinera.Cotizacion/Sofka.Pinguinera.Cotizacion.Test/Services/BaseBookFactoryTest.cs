@@ -2,11 +2,6 @@
 using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Enums;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sofka.Pinguinera.Cotizacion.Test.Services
 {
@@ -36,7 +31,6 @@ namespace Sofka.Pinguinera.Cotizacion.Test.Services
         }
 
      
-
         [Fact]
         public void BookEntityToPersistence_ShouldReturnCorrectType()
         {
@@ -67,9 +61,5 @@ namespace Sofka.Pinguinera.Cotizacion.Test.Services
 
             Assert.IsType<BookEntity>(result);
         }
-
-
-
-
     }
 }
