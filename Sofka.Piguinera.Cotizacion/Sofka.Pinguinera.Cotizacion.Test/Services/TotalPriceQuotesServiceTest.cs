@@ -1,83 +1,79 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Moq;
+﻿using Moq;
 using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
+using Sofka.Piguinera.Cotizacion.DesignPattern.Factories;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.Input;
 using Sofka.Piguinera.Cotizacion.Models.DTOS.OutputDTO;
+using Sofka.Piguinera.Cotizacion.Models.Entities;
 using Sofka.Piguinera.Cotizacion.Models.Persistence;
-using Sofka.Piguinera.Cotizacion.Services;
-using Sofka.Piguinera.Cotizacion.Services.Interface;
+using Sofka.Piguinera.Cotizacion.Services.Implementations;
 
 namespace Sofka.Pinguinera.Cotizacion.Test.Services
 {
     public class TotalPriceQuotesServiceTest
     {
-        private readonly Mock<IDatabase> _databaseMock;
-        private readonly ITotalPriceQuotesService service;
+
+        private readonly Mock<IBaseBookFactory> _baseBookFactoryMock;
+        private readonly Mock<IDataBaseService> _databaseServiceMock;
+        private readonly TotalPriceQuotesService _service;
 
         public TotalPriceQuotesServiceTest()
         {
-            var data = new List<BookPersistence>().AsQueryable();
-
-            var mockSet = new Mock<DbSet<BookPersistence>>();
-            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<BookPersistence>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
-            _databaseMock = new Mock<IDatabase>();
-            _databaseMock.Setup(database => database.Books).Returns(mockSet.Object);
-
-            service = new TotalPriceQuotesService(_databaseMock.Object);
-        }
-
-        public async void ShouldReturnCorrectType_WhenCalledWithValidInput()
-        {
-            var informationInputDtoList = new List<InformationInputDto>
-            {
-                new InformationInputDto("1", 5),
-                new InformationInputDto("2", 10)
-            };
-
-            _databaseMock
-              .Setup(database => database.SaveAsync())
-              .Returns(Task.FromResult(true));
-
-            var result = service.CalculateTotalPriceQuotes(informationInputDtoList);
-
-            Assert.NotNull(result);
-            Assert.IsType<BooksPurcheseOutputDTO>(result);
-
-            _databaseMock.Verify(database => database.Books.AddAsync(It.IsAny<BookPersistence>(), default), Times.Once);
-            _databaseMock.Verify(database => database.SaveAsync(), Times.Once);
+            _baseBookFactoryMock = new Mock<IBaseBookFactory>();
+            _databaseServiceMock = new Mock<IDataBaseService>();
+            _service = new TotalPriceQuotesService(_baseBookFactoryMock.Object, _databaseServiceMock.Object);
         }
 
         [Fact]
-        public async Task CalculateTotalPriceQuotes_WhenDatabaseSaveFails()
+        public void CalculateTotalPriceQuotes_ShouldReturnCorrectValue_WhenBooksExist()
         {
-            var informationInputDtoList = new List<InformationInputDto>
+            var input = new List<InformationInputDto>
             {
                 new InformationInputDto("1", 5),
                 new InformationInputDto("2", 10)
             };
+            var bookPersistence = new BookPersistence { Id = "1", Title = "Title1", EmailProvider = "user1@test.com", OriginalPrice = 100, Quantity = 5, Type = 1, UnitPrice = 90, Discount = 10 };
+            var bookOutputDto = new BaseBookOutputDTO("Title1", 0, 90, 10, 5);
+            var expectedOutput = new BooksPurcheseOutputDTO(new List<BaseBookOutputDTO> { bookOutputDto });
+            BookEntity bookEntity = new BookEntity("1","Title1", 100, "user1@test.com", 10, 5);
+            _databaseServiceMock.Setup(service => service.GetBookById(It.IsAny<string>())).Returns(bookPersistence);
+            _baseBookFactoryMock.Setup(factory => factory.BookPersistenceToEntity(bookPersistence, It.IsAny<int>())).Returns(bookEntity);
 
-            _databaseMock
-                .Setup(database => database.SaveAsync())
-               .Throws(new Exception("Database error"));
+            var result = _service.CalculateTotalPriceQuotes(input);
 
-            var result = service.CalculateTotalPriceQuotes(informationInputDtoList);
+            Assert.True(result.Books is List<BaseBookOutputDTO>);
+            Assert.NotEmpty(result.Books);
+        }
+        [Fact]
+        public void CalculateTotalPriceQuotes_ShouldReturnEmptyList_WhenBooksDoNotExist()
+        {
+            var input = new List<InformationInputDto>
+        {
+            new InformationInputDto("1", 5),
+            new InformationInputDto("2", 10)
+        };
+
+            _databaseServiceMock.Setup(service => service.GetBookById(It.IsAny<string>())).Returns((BookPersistence)null);
+
+            var result = _service.CalculateTotalPriceQuotes(input);
 
             Assert.Empty(result.Books);
         }
 
         [Fact]
-        public async Task CalculateTotalPriceQuotes_ShouldHandleEmptyList()
+        public void CalculateTotalPriceQuotes_ShouldHandleEmptyList()
         {
-            var informationInputDtoList = new List<InformationInputDto>();
+            // Arrange
+            var input = new List<InformationInputDto>();
 
-            var result = service.CalculateTotalPriceQuotes(informationInputDtoList);
+            // Act
+            var result = _service.CalculateTotalPriceQuotes(input);
 
+            // Assert
             Assert.Empty(result.Books);
-
         }
+
+        
+
+
     }
 }
