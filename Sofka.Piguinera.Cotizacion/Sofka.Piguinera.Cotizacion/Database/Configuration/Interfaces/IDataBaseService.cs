@@ -1,4 +1,5 @@
-﻿using Sofka.Piguinera.Cotizacion.Models.Persistence;
+﻿
+using Sofka.Piguinera.Cotizacion.Models.Persistence;
 
 namespace Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces
 {
@@ -11,6 +12,10 @@ namespace Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces
         Task<bool> AddBookAsync(BookPersistence book);
         Task<bool> UpdateBookAsync(BookPersistence book);
         Task<bool> DeleteBookAsync(string id);
+
+        Task<bool> AddUserAsync(UserPersistence user);
+        UserPersistence GetUser(string email);
+
 
     }
 }

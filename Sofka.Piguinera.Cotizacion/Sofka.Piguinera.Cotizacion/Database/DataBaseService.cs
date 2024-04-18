@@ -75,6 +75,20 @@ namespace Sofka.Piguinera.Cotizacion.Database
             });
         }
 
+        public Task<bool> AddUserAsync(UserPersistence user)
+        {
+            return ExecuteDbOperation(async () =>
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                await _database.Users.AddAsync(user);
+                return await _database.SaveAsync();
+            });
+        }
+
+        public UserPersistence GetUser(string email)
+        {
+            return ExecuteDbOperation(() => _database.Users.FirstOrDefault(u => u.Email == email));
+        }
 
 
 

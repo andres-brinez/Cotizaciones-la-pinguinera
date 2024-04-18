@@ -7,6 +7,7 @@ namespace Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces
     {
 
         DbSet<BookPersistence> Books { get; set; }
+        DbSet<UserPersistence> Users { get; set; }
         Task<bool> SaveAsync();
 
 
