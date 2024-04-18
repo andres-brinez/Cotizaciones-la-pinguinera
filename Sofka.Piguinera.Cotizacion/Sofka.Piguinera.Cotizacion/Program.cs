@@ -1,5 +1,7 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sofka.Piguinera.Cotizacion.Database;
 using Sofka.Piguinera.Cotizacion.Database.Configuration.Interfaces;
@@ -9,8 +11,42 @@ using Sofka.Piguinera.Cotizacion.Models.DTOS.InputDTO;
 using Sofka.Piguinera.Cotizacion.Services.Implementations;
 using Sofka.Piguinera.Cotizacion.Services.Interface;
 using Swashbuckle.AspNetCore.Filters;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+// Se configura el servicio de autenticación y autorización
+builder.Services.AddAuthorization();
+builder.Services
+  .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddJwtBearer(option =>
+  {
+      var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSecretKey"]));
+
+      option.RequireHttpsMetadata = false;
+
+      option.TokenValidationParameters = new TokenValidationParameters()
+      {
+          ValidateIssuer = true,
+          ValidateLifetime = true,
+          IssuerSigningKey = signinKey,
+          ValidAudience = builder.Configuration["TokenIssuer"],
+          ValidIssuer = builder.Configuration["TokenIssuer"]
+      };
+  });
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+      builder =>
+      {
+          builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+      });
+});
+
 
 // Add services to the container.
 
@@ -46,7 +82,7 @@ builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Enable middleware to serve generated Swagger as a JSON endpoint.

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -151,7 +152,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
         }
 
 
-        [HttpGet("GetAllBooks")]
+        [HttpGet("GetAllBooks"),Authorize]
         [Produces("application/json")]
         [ProducesResponseType(typeof(List<BookPersistence>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
