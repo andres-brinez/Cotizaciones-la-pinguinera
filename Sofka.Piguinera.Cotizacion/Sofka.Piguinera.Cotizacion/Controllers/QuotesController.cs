@@ -58,7 +58,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-
             try
             {
                 var result = await _totalPriceQuotationService.CalculateTotalPriceQuotation(payload);
@@ -66,7 +65,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                 // validacion
                 if (result == null)
                 {
-                    return BadRequest("Error al guardar en la base de datos");
+                    return BadRequest(new {error= "Error al guardar en la base de datos" });
                 }
 
                 return Ok(result);
@@ -92,8 +91,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
             }
         }
         
-
-
         [HttpPost("CalculateBooksPay")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(BooksPurcheseOutputDTO), StatusCodes.Status200OK)]
@@ -117,7 +114,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
             if (result == null)
             {
-                return BadRequest("Error al guardar en la base de datos");
+                return BadRequest(new { error = "Error al guardar en la base de datos" });
             }
 
             return Ok(result);
@@ -146,7 +143,7 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
 
             if (result == null)
             {
-                return BadRequest("Error al guardar en la base de datos");
+                return BadRequest(new { error = "Error al guardar en la base de datos" });
             }
 
             return Ok(result);
