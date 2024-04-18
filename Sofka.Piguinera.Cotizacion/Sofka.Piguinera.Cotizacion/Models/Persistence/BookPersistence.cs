@@ -4,8 +4,7 @@
     {
         public string Id { get; set; }
         public string? Title { get; set; }
-        public string? NameProvider { get; set; }
-        public int? Seniority { get; set; }
+        public string? EmailProvider { get; set; }
         public int? OriginalPrice { get; set; }
         public int? Quantity { get; set; }
         public byte Type { get; set; }
@@ -14,7 +13,7 @@
 
         public string ToString()
         {
-            return "Id: " + Id + " Title: " + Title + " NameProvider: " + NameProvider + " Seniority: " + Seniority + " OriginalPrice: " + OriginalPrice + " Quantity: " + Quantity + " Type: " + Type + " UnitPrice: " + UnitPrice + " Discount: " + Discount;
+            return "Id: " + Id + " Title: " + Title + " EmailProvider: " + EmailProvider + " OriginalPrice: " + OriginalPrice + " Quantity: " + Quantity + " Type: " + Type + " UnitPrice: " + UnitPrice + " Discount: " + Discount;
         }
     }
 }

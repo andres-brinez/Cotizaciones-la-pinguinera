@@ -10,8 +10,7 @@ namespace Sofka.Piguinera.Cotizacion.Database.Configuration
         {
             entityBuilder.HasKey(entity => entity.Id);
             entityBuilder.Property(entity => entity.Title).IsRequired();
-            entityBuilder.Property(entity => entity.NameProvider).IsRequired();
-            entityBuilder.Property(entity => entity.Seniority).IsRequired();
+            entityBuilder.Property(entity => entity.EmailProvider).IsRequired();
             entityBuilder.Property(entity => entity.OriginalPrice).IsRequired();
             entityBuilder.Property(entity => entity.Quantity).IsRequired();
             entityBuilder.Property(entity => entity.Type).IsRequired();
