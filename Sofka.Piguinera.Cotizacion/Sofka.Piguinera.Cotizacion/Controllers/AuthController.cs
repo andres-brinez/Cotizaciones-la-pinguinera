@@ -119,7 +119,6 @@ namespace Sofka.Piguinera.Cotizacion.Controllers
                     return Ok(new AuthenticatedResponse { Token = tokenString });
                 }
 
-                return Ok("Inicio de sesión exitoso");
 
             }   
         }
