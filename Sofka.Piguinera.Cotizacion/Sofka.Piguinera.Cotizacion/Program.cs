@@ -81,10 +81,6 @@ builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseAuthentication();
-app.UseAuthorization();
-
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();
 
@@ -94,6 +90,14 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 });
+
+
+// Configure the HTTP request pipeline.
+
+app.UseCors();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
